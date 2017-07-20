@@ -18098,16 +18098,15 @@ $$\sigma_{n1 &lt; n2}(\rho_{C1(n1, s, e1)}College \Join \rho_{C2(n2, s, e2)}Coll
 <ul>
 <li><p>Break down relational algebra statements into its parts</p>
 </li>
-<li><p>E.g. pairs of colleges in same state:
-\begin{align}
-C1 &amp;:= \rho<em>{C1(n1, s, e1)} \
-C2 &amp;:= \rho</em>{C2(n2, s, e2)} \
-CP &amp;:= C1 \Join C2 \
-Ans &amp;:= \sigma_{n1 &lt; n2}CP
-\end{align}
-<br><br></p>
+<li><p>E.g. pairs of colleges in same state:</p>
 </li>
 </ul>
+\begin{align}
+C1 &amp;:= \rho_{C1(n1, s, e1)} \\
+C2 &amp;:= \rho_{C2(n2, s, e2)} \\
+CP &amp;:= C1 \Join C2 \\
+Ans &amp;:= \sigma_{n1 &lt; n2}CP
+\end{align}<p><br><br></p>
 <p><strong>Expression Trees:</strong></p>
 <ul>
 <li><p>A visual representation of how SQL is compiled in a database system</p>
@@ -22061,7 +22060,7 @@ width=500
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[NbConvertApp] Converting notebook DB4_Relational_Algebra_Notes.ipynb to html
-[NbConvertApp] Writing 1012069 bytes to DB4_Relational_Algebra_Notes.html
+[NbConvertApp] Writing 1012071 bytes to DB4_Relational_Algebra_Notes.html
 </pre>
 </div>
 </div>
