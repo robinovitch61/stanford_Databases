@@ -14337,7 +14337,67 @@ from Student;
 </li>
 <li><p>Can use algebra in select statements</p>
 </li>
-<li><p>Easy to rename attributes with <em>as</em> statement within select</p>
+<li><p>Easy to rename attributes with <em>as</em> statement within select
+<br><br></p>
+</li>
+</ul>
+<p><strong>Table Variables (in From clause):</strong></p>
+<ul>
+<li>Usefullness:<ol>
+<li>Improve readability</li>
+<li>Rename relations used in From clause (particularly with two instances of same relation)
+<br><br></li>
+</ol>
+</li>
+</ul>
+
+</div>
+</div>
+</div># Rename relations in From clause using second variable before comma:
+select S.ID, sName, GPA, A.cName, enrollment
+from Student S, College C, Apply A
+where A.sID = S.sID and A.cName = C.cName;
+
+# All pairs of students that have the same GPA:
+select S1.sID, S1.sName, S1.GPA, S2.sID, S2.sName, S2.GPA
+from Student S1, Student S2    # Repeated relation here -> does cross product here (all possible pairs)
+where S1.GPA = S2.GPA and S1.sID < S1.sID;    # Note that "!=" is "<>" in SQL -> using less-than to avoid doubles
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Set Operators: Union, Intersect and Except:</strong></p>
+<ul>
+<li><p>Union: generate "stacking" of multiple relations</p>
+</li>
+<li><p>Example:</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>select cName as name from College    # "as" statement specifies new attribute name
+union all    # remove "all" statement to remove duplicates (in SQL, removing duplicates sorts entries)
+select sName as name from Student    # "as" statement specifies new attribute name
+order by name;    # ensures sorted order</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p>Intersect: generate subset of multiple relations</p>
+<ul>
+<li>Example: LEO YOU WERE AT 7:23</li>
+</ul>
 </li>
 </ul>
 
@@ -14357,7 +14417,7 @@ from Student;
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[NbConvertApp] Converting notebook DB5_SQL_Notes.ipynb to html
-[NbConvertApp] Writing 253035 bytes to DB5_SQL_Notes.html
+[NbConvertApp] Writing 441090 bytes to DB5_SQL_Notes.html
 </pre>
 </div>
 </div>
