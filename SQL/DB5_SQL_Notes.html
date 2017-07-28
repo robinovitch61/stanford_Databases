@@ -11814,8 +11814,7 @@ line-height:2.5em;
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Introduction:</strong></p>
-<ul>
+<h3 id="Introduction:">Introduction:<a class="anchor-link" href="#Introduction:">&#182;</a></h3><ul>
 <li><p>Pronounced "Sequel" :-)</p>
 </li>
 <li><p>Declarative, high-level language whose foundations are based in relational algebra</p>
@@ -14277,8 +14276,7 @@ width=800
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Select Statement - Query a Database in SQL:</strong></p>
-<ul>
+<h3 id="Select-Statement---Query-a-Database-in-SQL:">Select Statement - Query a Database in SQL:<a class="anchor-link" href="#Select-Statement---Query-a-Database-in-SQL:">&#182;</a></h3><ul>
 <li><p>Consists of three basic clauses:</p>
 <ul>
 <li>Select $A_1, A_2,...,A_n \to$ specify what to return</li>
@@ -14297,33 +14295,43 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 
 </div>
 </div>
-</div> select sID, sName
-from Student
-where GPA > 3.6;
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span>
+<span class="kn">from</span> <span class="nn">Student</span>
+<span class="n">where</span> <span class="n">GPA</span> <span class="o">&gt;</span> <span class="mf">3.6</span><span class="p">;</span>
 
-select distinct sName, major    # distinct keyword ensures no duplicates
-from Student, Apply
-where Student.sId = Apply.sID;
+<span class="n">select</span> <span class="n">distinct</span> <span class="n">sName</span><span class="p">,</span> <span class="n">major</span>    <span class="c1"># distinct keyword ensures no duplicates</span>
+<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="n">where</span> <span class="n">Student</span><span class="o">.</span><span class="n">sId</span> <span class="o">=</span> <span class="n">Apply</span><span class="o">.</span><span class="n">sID</span><span class="p">;</span>
 
-select sName, GPA, dec
-from Student, Apply
-where Student.sID = Apply.sID and sizeHS < 1000 and major = 'CS' and cName = 'Stanford';
+<span class="n">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">dec</span>
+<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="n">where</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">sizeHS</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="ow">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="ow">and</span> <span class="n">cName</span> <span class="o">=</span> <span class="s1">&#39;Stanford&#39;</span><span class="p">;</span>
 
-select Student.sID, sName, GPA, Apply.cName, enrollment    # specific relations to avoid ambiguity (sID, cName)
-from Student, College, Apply
-where Apply.sID = Student.sID and Apply.cName = College.cName
-order by GPA desc, enrollment;    # sort results first by descending GPA & within same GPA, by ascending enrollment
+<span class="n">select</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">Apply</span><span class="o">.</span><span class="n">cName</span><span class="p">,</span> <span class="n">enrollment</span>    <span class="c1"># specific relations avoid ambiguity (sID, cName)</span>
+<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">College</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="n">where</span> <span class="n">Apply</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">Apply</span><span class="o">.</span><span class="n">cName</span> <span class="o">=</span> <span class="n">College</span><span class="o">.</span><span class="n">cName</span>
+<span class="n">order</span> <span class="n">by</span> <span class="n">GPA</span> <span class="n">desc</span><span class="p">,</span> <span class="n">enrollment</span><span class="p">;</span>    <span class="c1"># sort results first by descending GPA &amp; within same GPA, by ascending enrollment</span>
 
-select sID, major
-from Apply
-where major like '%bio%';    # match any major where there's some set of chars, then 'bio', then some set of chars
+<span class="n">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">major</span>
+<span class="kn">from</span> <span class="nn">Apply</span>
+<span class="n">where</span> <span class="n">major</span> <span class="n">like</span> <span class="s1">&#39;%bio%&#39;</span><span class="p">;</span>    <span class="c1"># match any major where there&#39;s some set of chars, then &#39;bio&#39;, then some set of chars</span>
 
-# Cross product of Student and College with no filtering:
-select *
-from Student, College;
+<span class="c1"># Cross product of Student and College with no filtering:</span>
+<span class="n">select</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">College</span><span class="p">;</span>
 
-select sID, sName, GPA, sizeHS, GPA * (sizeHS / 1000.0) as scaledGPA    # rename last attribute with 'as'
-from Student;
+<span class="n">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">sizeHS</span><span class="p">,</span> <span class="n">GPA</span> <span class="o">*</span> <span class="p">(</span><span class="n">sizeHS</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span> <span class="k">as</span> <span class="n">scaledGPA</span>    <span class="c1"># rename last attribute with &#39;as&#39;</span>
+<span class="kn">from</span> <span class="nn">Student</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
@@ -14341,8 +14349,7 @@ from Student;
 <br><br></p>
 </li>
 </ul>
-<p><strong>Table Variables (in From clause):</strong></p>
-<ul>
+<h3 id="Table-Variables-(in-From-clause):">Table Variables (in From clause):<a class="anchor-link" href="#Table-Variables-(in-From-clause):">&#182;</a></h3><ul>
 <li>Usefullness:<ol>
 <li>Improve readability</li>
 <li>Rename relations used in From clause (particularly with two instances of same relation)
@@ -14353,24 +14360,153 @@ from Student;
 
 </div>
 </div>
-</div># Rename relations in From clause using second variable before comma:
-select S.ID, sName, GPA, A.cName, enrollment
-from Student S, College C, Apply A
-where A.sID = S.sID and A.cName = C.cName;
-
-# All pairs of students that have the same GPA:
-select S1.sID, S1.sName, S1.GPA, S2.sID, S2.sName, S2.GPA
-from Student S1, Student S2    # Repeated relation here -> does cross product here (all possible pairs)
-where S1.GPA = S2.GPA and S1.sID < S1.sID;    # Note that "!=" is "<>" in SQL -> using less-than to avoid doubles
+</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p><strong>Set Operators: Union, Intersect and Except:</strong></p>
+<div class="highlight"><pre><span></span><span class="c1"># Rename relations in From clause using second variable before comma:</span>
+<span class="n">select</span> <span class="n">S</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">cName</span><span class="p">,</span> <span class="n">enrollment</span>
+<span class="kn">from</span> <span class="nn">Student</span> <span class="nn">S</span><span class="p">,</span> <span class="n">College</span> <span class="n">C</span><span class="p">,</span> <span class="n">Apply</span> <span class="n">A</span>
+<span class="n">where</span> <span class="n">A</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">A</span><span class="o">.</span><span class="n">cName</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">cName</span><span class="p">;</span>
+
+<span class="c1"># All pairs of students that have the same GPA:</span>
+<span class="n">select</span> <span class="n">S1</span><span class="o">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">S1</span><span class="o">.</span><span class="n">sName</span><span class="p">,</span> <span class="n">S1</span><span class="o">.</span><span class="n">GPA</span><span class="p">,</span> <span class="n">S2</span><span class="o">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">S2</span><span class="o">.</span><span class="n">sName</span><span class="p">,</span> <span class="n">S2</span><span class="o">.</span><span class="n">GPA</span>
+<span class="kn">from</span> <span class="nn">Student</span> <span class="nn">S1</span><span class="p">,</span> <span class="n">Student</span> <span class="n">S2</span>    <span class="c1"># Repeated relation here -&gt; does cross product here (all possible pairs)</span>
+<span class="n">where</span> <span class="n">S1</span><span class="o">.</span><span class="n">GPA</span> <span class="o">=</span> <span class="n">S2</span><span class="o">.</span><span class="n">GPA</span> <span class="ow">and</span> <span class="n">S1</span><span class="o">.</span><span class="n">sID</span> <span class="o">&lt;</span> <span class="n">S1</span><span class="o">.</span><span class="n">sID</span><span class="p">;</span>    <span class="c1"># Note that &quot;!=&quot; is &quot;&lt;&gt;&quot; in SQL -&gt; using less-than to avoid doubles</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Set-Operators:-Union,-Intersect-and-Except:">Set Operators: Union, Intersect and Except:<a class="anchor-link" href="#Set-Operators:-Union,-Intersect-and-Except:">&#182;</a></h3><p><strong>Union: generate "stacking" of multiple relations</strong></p>
 <ul>
-<li><p>Union: generate "stacking" of multiple relations</p>
+<li>Example:</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">cName</span> <span class="k">as</span> <span class="n">name</span> <span class="kn">from</span> <span class="nn">College</span>    <span class="c1"># &quot;as&quot; statement specifies new attribute name</span>
+<span class="n">union</span> <span class="nb">all</span>    <span class="c1"># remove &quot;all&quot; statement to remove duplicates (in SQL, removing duplicates sorts entries)</span>
+<span class="n">select</span> <span class="n">sName</span> <span class="k">as</span> <span class="n">name</span> <span class="kn">from</span> <span class="nn">Student</span>    <span class="c1"># &quot;as&quot; statement specifies new attribute name</span>
+<span class="n">order</span> <span class="n">by</span> <span class="n">name</span><span class="p">;</span>    <span class="c1"># ensures sorted order</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Intersect: generate overlapping subset of multiple relations</strong></p>
+<ul>
+<li>Example:</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">sID</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span>
+<span class="n">intersect</span>
+<span class="n">select</span> <span class="n">sID</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span><span class="p">;</span>
+
+<span class="c1"># Some database systems don&#39;t support intersect operator: </span>
+<span class="n">select</span> <span class="n">distinct</span> <span class="n">A1</span><span class="o">.</span><span class="n">sID</span>    <span class="c1"># note the distinct here to remove duplicates</span>
+<span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">A1</span><span class="p">,</span> <span class="n">Apply</span> <span class="n">A2</span>     <span class="c1"># every pair of Apply tuples</span>
+<span class="n">where</span> <span class="n">A1</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">A2</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">A1</span><span class="o">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="ow">and</span> <span class="n">A2</span><span class="o">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Except (or Minus, Difference): generate conditional subset of multiple relations</strong></p>
+<ul>
+<li>Example:</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">sId</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span>
+<span class="k">except</span>
+<span class="n">select</span> <span class="n">sID</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span>
+
+<span class="c1"># Some database systems don&#39;t support except operator:</span>
+<span class="n">select</span> <span class="n">distinct</span> <span class="n">A1</span><span class="o">.</span><span class="n">sID</span>
+<span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">A1</span><span class="p">,</span> <span class="n">Apply</span> <span class="n">A2</span>
+<span class="n">where</span> <span class="n">A1</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">A2</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">A1</span><span class="o">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="ow">and</span> <span class="n">A2</span><span class="o">.</span><span class="n">major</span> <span class="o">&lt;&gt;</span> <span class="s1">&#39;EE&#39;</span><span class="p">;</span>
+<span class="c1"># THIS DOES NOT RETURN THE SAME AS ABOVE! RETRUNS sIDs BASED ON ALL MAJOR PAIRS, SO PASSES MORE PEOPLE THAN IT SHOULD. NOT ACTUALLY POSSIBLE TO WRITE DIFFERENCE WITHOUT EXCEPT OPERATOR WITH TOOLS SO FAR!</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Subqueries-in-Where-Clause:">Subqueries in Where Clause:<a class="anchor-link" href="#Subqueries-in-Where-Clause:">&#182;</a></h3><ul>
+<li>Nested select statements within where clause</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1"># Previous way to do it:</span>
+<span class="n">select</span> <span class="n">distinct</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">sName</span>    <span class="c1"># note the disambiguation here (both relations have sID attributes) </span>
+<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="n">where</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">Apply</span><span class="o">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">;</span>
+
+<span class="c1"># New way to do it with subqueries in where clause (note this does not require the &quot;distinct&quot; like above)</span>
+<span class="n">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span>
+<span class="kn">from</span> <span class="nn">Student</span>
+<span class="n">where</span> <span class="n">sID</span> <span class="ow">in</span> <span class="p">(</span><span class="n">select</span> <span class="n">sID</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li><p>Note that the "distinct" keyword filters on the final resulting relation.</p>
+<ul>
+<li>E.g. If you're just pulling names of students with certain conditions and there are 2 Craigs that fit the condition, "distinct" will filter out one of the Craigs because it is just looking at a column of names! This is undesirable.
+<br><br></li>
+</ul>
 </li>
-<li><p>Example:</p>
+<li><p>This becomes super important when it comes to counting and eliminating duplicates</p>
+<ul>
+<li>Sometimes subqueries in Where clause is the ONLY way to get what you want accurately:</li>
+</ul>
 </li>
 </ul>
 
@@ -14381,25 +14517,16 @@ where S1.GPA = S2.GPA and S1.sID < S1.sID;    # Note that "!=" is "<>" in SQL ->
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>select cName as name from College    # "as" statement specifies new attribute name
-union all    # remove "all" statement to remove duplicates (in SQL, removing duplicates sorts entries)
-select sName as name from Student    # "as" statement specifies new attribute name
-order by name;    # ensures sorted order</p>
+<div class="highlight"><pre><span></span><span class="c1"># This returns the 5 GPAS from 5 students who applied to CS at any school:</span>
+<span class="n">select</span> <span class="n">GPA</span>
+<span class="kn">from</span> <span class="nn">Student</span>
+<span class="n">where</span> <span class="n">sID</span> <span class="ow">in</span> <span class="p">(</span><span class="n">select</span> <span class="n">sID</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">);</span>
 
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
-</div>
-<div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<ul>
-<li><p>Intersect: generate subset of multiple relations</p>
-<ul>
-<li>Example: LEO YOU WERE AT 7:23</li>
-</ul>
-</li>
-</ul>
+<span class="c1"># This returns duplicates (without &quot;distinct&quot;), but putting &quot;distinct&quot; eliminates equal GPAs! Neither good!</span>
+<span class="n">select</span> <span class="n">GPA</span>
+<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="n">where</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">;</span>
+</pre></div>
 
 </div>
 </div>
@@ -14417,7 +14544,7 @@ order by name;    # ensures sorted order</p>
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[NbConvertApp] Converting notebook DB5_SQL_Notes.ipynb to html
-[NbConvertApp] Writing 441090 bytes to DB5_SQL_Notes.html
+[NbConvertApp] Writing 270670 bytes to DB5_SQL_Notes.html
 </pre>
 </div>
 </div>
