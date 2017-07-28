@@ -14457,7 +14457,7 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 <span class="k">select</span> <span class="k">distinct</span> <span class="n">A1</span><span class="p">.</span><span class="n">sID</span>
 <span class="k">from</span> <span class="n">Apply</span> <span class="n">A1</span><span class="p">,</span> <span class="n">Apply</span> <span class="n">A2</span>
 <span class="k">where</span> <span class="n">A1</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">A2</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">A1</span><span class="p">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="k">and</span> <span class="n">A2</span><span class="p">.</span><span class="n">major</span> <span class="o">&lt;&gt;</span> <span class="s1">&#39;EE&#39;</span><span class="p">;</span>
-<span class="c1">-- THIS DOES NOT RETURN THE SAME AS ABOVE! RETRUNS sIDs BASED ON ALL MAJOR PAIRS, SO PASSES MORE PEOPLE THAN IT SHOULD. NOT ACTUALLY POSSIBLE TO WRITE DIFFERENCE WITHOUT EXCEPT OPERATOR WITH TOOLS SO FAR!</span>
+<span class="c1">-- THIS DOES NOT RETURN THE SAME AS ABOVE! RETRUNS sIDs BASED ON ALL MAJOR PAIRS, SO PASSES MORE PEOPLE THAN IT SHOULD. NOT ACTUALLY POSSIBLE TO WRITE DIFFERENCE WITHOUT EXCEPT OPERATOR WITH TOOLS SO FAR! SEE &#39;@@&#39; BELOW!</span>
 </pre></div>
 
 </div>
@@ -14526,6 +14526,122 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 <span class="k">select</span> <span class="n">GPA</span>
 <span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
 <span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Can now write previous query properly for database systems that don&#39;t accept &quot;Except&quot;! @@</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">sID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">)</span> 
+    <span class="k">and</span> <span class="n">sID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span><span class="p">);</span> <span class="c1">-- could also write &quot;and not sID in select..&quot;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>The <strong>exists</strong> operator: returns where something exists or does not exist (masking)</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- All colleges such that some other college is in the same state:</span>
+<span class="k">select</span> <span class="n">cName</span><span class="p">,</span> <span class="k">state</span>
+<span class="k">from</span> <span class="n">College</span> <span class="n">C1</span>
+<span class="k">where</span> <span class="k">exists</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">College</span> <span class="n">C2</span>
+              <span class="k">where</span> <span class="n">C2</span><span class="p">.</span><span class="k">state</span> <span class="o">=</span> <span class="n">C1</span><span class="p">.</span><span class="k">state</span> <span class="k">and</span> <span class="n">C1</span><span class="p">.</span><span class="n">cName</span> <span class="o">&lt;&gt;</span> <span class="n">C2</span><span class="p">.</span><span class="n">cName</span><span class="p">);</span>
+
+<span class="c1">-- College with largest enrollment -&gt; all colleges where there doesn&#39;t exist other college with &gt; enrollment</span>
+<span class="k">select</span> <span class="n">cName</span>
+<span class="k">from</span> <span class="n">College</span> <span class="n">C1</span>
+<span class="k">where</span> <span class="k">not</span> <span class="k">exists</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">College</span> <span class="n">C2</span>
+                  <span class="k">where</span> <span class="n">C2</span><span class="p">.</span><span class="n">enrollment</span> <span class="o">&gt;</span> <span class="n">C1</span><span class="p">.</span><span class="n">enrollment</span><span class="p">);</span>
+
+<span class="c1">-- Note that this cannot be done with joins - below finds all students s.t. some other student has lower GPA</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">S1</span><span class="p">.</span><span class="n">sName</span><span class="p">,</span> <span class="n">S1</span><span class="p">.</span><span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="n">S1</span><span class="p">,</span> <span class="n">Student</span> <span class="n">S2</span>
+<span class="k">where</span> <span class="n">S1</span><span class="p">.</span><span class="n">GPA</span> <span class="o">&gt;</span> <span class="n">S2</span><span class="p">.</span><span class="n">GPA</span><span class="p">;</span>
+    <span class="c1">-- again, this is WRONG</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>The <strong>all</strong> operator: does a value have a relationship with ALL the results of a subquery?</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Another correct way of finding a max using subqueries and the &quot;all&quot; keyword:</span>
+<span class="k">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">GPA</span> <span class="o">&gt;=</span> <span class="k">all</span> <span class="p">(</span><span class="k">select</span> <span class="n">GPA</span> <span class="k">from</span> <span class="n">Student</span><span class="p">);</span>
+
+<span class="c1">-- Replace &gt;= with &gt; (just another valid way of doing maximums):</span>
+<span class="k">select</span> <span class="n">cName</span><span class="p">,</span> <span class="n">GPA</span>
+<span class="k">from</span> <span class="n">College</span> <span class="n">C1</span>
+<span class="k">where</span> <span class="n">enrollment</span> <span class="o">&gt;</span> <span class="k">all</span> <span class="p">(</span><span class="k">select</span> <span class="n">College</span> <span class="k">from</span> <span class="n">College</span> <span class="n">C2</span>
+                        <span class="k">where</span> <span class="n">C2</span><span class="p">.</span><span class="n">enrollment</span> <span class="o">&lt;&gt;</span> <span class="n">C2</span><span class="p">.</span><span class="n">enrollment</span><span class="p">);</span>
+    <span class="c1">-- NOTE: THIS WOULD NOT WORK IF THERE WERE MULTIPLE COLLEGES WITH EQUAL MAXIMUM ENROLLMENT VALUES</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>The <strong>any</strong> operator: does a value satisfy a condition with at least one of the results of a subquery?</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Return all colleges where it&#39;s not the case that the enrollment is &lt;= to any other college:</span>
+<span class="k">select</span> <span class="n">cName</span><span class="p">,</span> <span class="n">GPA</span>
+<span class="k">from</span> <span class="n">College</span> <span class="n">C1</span>
+<span class="k">where</span> <span class="k">not</span> <span class="n">enrollment</span> <span class="o">&lt;=</span> <span class="k">any</span> <span class="p">(</span><span class="k">select</span> <span class="n">College</span> <span class="k">from</span> <span class="n">College</span> <span class="n">C2</span>
+                             <span class="k">where</span> <span class="n">C2</span><span class="p">.</span><span class="n">enrollment</span> <span class="o">&lt;&gt;</span> <span class="n">C2</span><span class="p">.</span><span class="n">enrollment</span><span class="p">);</span>
+    <span class="c1">-- NOTE: THIS WOULD NOT WORK IF THERE WERE MULTIPLE COLLEGES WITH EQUAL MAXIMUM ENROLLMENT VALUES</span>
+
+<span class="c1">-- Find all students not from the smallest highschool:</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">sizeHS</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">sizeHS</span> <span class="o">&gt;</span> <span class="k">any</span> <span class="p">(</span><span class="k">select</span> <span class="n">sizeHS</span> <span class="k">from</span> <span class="n">Student</span><span class="p">);</span>
+
+<span class="c1">-- SQLite and other database systems do not support &quot;any&quot; and &quot;all&quot; operators:</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">sizeHS</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="n">S1</span>
+<span class="k">where</span> <span class="k">exists</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">Student</span> <span class="n">S2</span> <span class="k">where</span> <span class="n">S2</span><span class="p">.</span><span class="n">sizeHS</span> <span class="o">&lt;</span> <span class="n">S1</span><span class="p">.</span><span class="n">sizeHS</span><span class="p">);</span>
+
+<span class="c1">-- Students who applied to CS but not to EE using &quot;any&quot;:</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">sID</span> <span class="o">=</span> <span class="k">any</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">)</span>
+            <span class="k">and</span> <span class="k">not</span> <span class="n">sID</span> <span class="o">=</span> <span class="k">any</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span><span class="p">);</span>
 </pre></div>
 
 </div>
@@ -14544,7 +14660,7 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[NbConvertApp] Converting notebook DB5_SQL_Notes.ipynb to html
-[NbConvertApp] Writing 456957 bytes to DB5_SQL_Notes.html
+[NbConvertApp] Writing 467568 bytes to DB5_SQL_Notes.html
 </pre>
 </div>
 </div>
