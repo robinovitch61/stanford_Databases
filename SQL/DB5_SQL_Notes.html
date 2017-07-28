@@ -14300,33 +14300,33 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span>
-<span class="kn">from</span> <span class="nn">Student</span>
-<span class="n">where</span> <span class="n">GPA</span> <span class="o">&gt;</span> <span class="mf">3.6</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">GPA</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">.</span><span class="mi">6</span><span class="p">;</span>
 
-<span class="n">select</span> <span class="n">distinct</span> <span class="n">sName</span><span class="p">,</span> <span class="n">major</span>    <span class="c1"># distinct keyword ensures no duplicates</span>
-<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">Apply</span>
-<span class="n">where</span> <span class="n">Student</span><span class="o">.</span><span class="n">sId</span> <span class="o">=</span> <span class="n">Apply</span><span class="o">.</span><span class="n">sID</span><span class="p">;</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">sName</span><span class="p">,</span> <span class="n">major</span>    <span class="c1">-- distinct keyword ensures no duplicates</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sId</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span><span class="p">;</span>
 
-<span class="n">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">dec</span>
-<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">Apply</span>
-<span class="n">where</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">sizeHS</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="ow">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="ow">and</span> <span class="n">cName</span> <span class="o">=</span> <span class="s1">&#39;Stanford&#39;</span><span class="p">;</span>
+<span class="k">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="nb">dec</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">sizeHS</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="k">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="k">and</span> <span class="n">cName</span> <span class="o">=</span> <span class="s1">&#39;Stanford&#39;</span><span class="p">;</span>
 
-<span class="n">select</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">Apply</span><span class="o">.</span><span class="n">cName</span><span class="p">,</span> <span class="n">enrollment</span>    <span class="c1"># specific relations avoid ambiguity (sID, cName)</span>
-<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">College</span><span class="p">,</span> <span class="n">Apply</span>
-<span class="n">where</span> <span class="n">Apply</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">Apply</span><span class="o">.</span><span class="n">cName</span> <span class="o">=</span> <span class="n">College</span><span class="o">.</span><span class="n">cName</span>
-<span class="n">order</span> <span class="n">by</span> <span class="n">GPA</span> <span class="n">desc</span><span class="p">,</span> <span class="n">enrollment</span><span class="p">;</span>    <span class="c1"># sort results first by descending GPA &amp; within same GPA, by ascending enrollment</span>
+<span class="k">select</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">Apply</span><span class="p">.</span><span class="n">cName</span><span class="p">,</span> <span class="n">enrollment</span>    <span class="c1">-- specific relations avoid ambiguity (sID, cName)</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">College</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">Apply</span><span class="p">.</span><span class="n">cName</span> <span class="o">=</span> <span class="n">College</span><span class="p">.</span><span class="n">cName</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">GPA</span> <span class="k">desc</span><span class="p">,</span> <span class="n">enrollment</span><span class="p">;</span>    <span class="c1">-- sort results first by descending GPA &amp; within same GPA, by ascending enrollment</span>
 
-<span class="n">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">major</span>
-<span class="kn">from</span> <span class="nn">Apply</span>
-<span class="n">where</span> <span class="n">major</span> <span class="n">like</span> <span class="s1">&#39;%bio%&#39;</span><span class="p">;</span>    <span class="c1"># match any major where there&#39;s some set of chars, then &#39;bio&#39;, then some set of chars</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">major</span>
+<span class="k">from</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">major</span> <span class="k">like</span> <span class="s1">&#39;%bio%&#39;</span><span class="p">;</span>    <span class="c1">-- match any major where there&#39;s some set of chars, then &#39;bio&#39;, then some set of chars</span>
 
-<span class="c1"># Cross product of Student and College with no filtering:</span>
-<span class="n">select</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">College</span><span class="p">;</span>
+<span class="c1">-- Cross product of Student and College with no filtering:</span>
+<span class="k">select</span> <span class="o">*</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">College</span><span class="p">;</span>
 
-<span class="n">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">sizeHS</span><span class="p">,</span> <span class="n">GPA</span> <span class="o">*</span> <span class="p">(</span><span class="n">sizeHS</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span> <span class="k">as</span> <span class="n">scaledGPA</span>    <span class="c1"># rename last attribute with &#39;as&#39;</span>
-<span class="kn">from</span> <span class="nn">Student</span><span class="p">;</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">sizeHS</span><span class="p">,</span> <span class="n">GPA</span> <span class="o">*</span> <span class="p">(</span><span class="n">sizeHS</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">.</span><span class="mi">0</span><span class="p">)</span> <span class="k">as</span> <span class="n">scaledGPA</span>    <span class="c1">-- rename last attribute with &#39;as&#39;</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">;</span>
 </pre></div>
 
 </div>
@@ -14365,15 +14365,15 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="c1"># Rename relations in From clause using second variable before comma:</span>
-<span class="n">select</span> <span class="n">S</span><span class="o">.</span><span class="n">ID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">cName</span><span class="p">,</span> <span class="n">enrollment</span>
-<span class="kn">from</span> <span class="nn">Student</span> <span class="nn">S</span><span class="p">,</span> <span class="n">College</span> <span class="n">C</span><span class="p">,</span> <span class="n">Apply</span> <span class="n">A</span>
-<span class="n">where</span> <span class="n">A</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">A</span><span class="o">.</span><span class="n">cName</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">cName</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="c1">-- Rename relations in From clause using second variable before comma:</span>
+<span class="k">select</span> <span class="n">S</span><span class="p">.</span><span class="n">ID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">A</span><span class="p">.</span><span class="n">cName</span><span class="p">,</span> <span class="n">enrollment</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="n">S</span><span class="p">,</span> <span class="n">College</span> <span class="k">C</span><span class="p">,</span> <span class="n">Apply</span> <span class="n">A</span>
+<span class="k">where</span> <span class="n">A</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">S</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">A</span><span class="p">.</span><span class="n">cName</span> <span class="o">=</span> <span class="k">C</span><span class="p">.</span><span class="n">cName</span><span class="p">;</span>
 
-<span class="c1"># All pairs of students that have the same GPA:</span>
-<span class="n">select</span> <span class="n">S1</span><span class="o">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">S1</span><span class="o">.</span><span class="n">sName</span><span class="p">,</span> <span class="n">S1</span><span class="o">.</span><span class="n">GPA</span><span class="p">,</span> <span class="n">S2</span><span class="o">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">S2</span><span class="o">.</span><span class="n">sName</span><span class="p">,</span> <span class="n">S2</span><span class="o">.</span><span class="n">GPA</span>
-<span class="kn">from</span> <span class="nn">Student</span> <span class="nn">S1</span><span class="p">,</span> <span class="n">Student</span> <span class="n">S2</span>    <span class="c1"># Repeated relation here -&gt; does cross product here (all possible pairs)</span>
-<span class="n">where</span> <span class="n">S1</span><span class="o">.</span><span class="n">GPA</span> <span class="o">=</span> <span class="n">S2</span><span class="o">.</span><span class="n">GPA</span> <span class="ow">and</span> <span class="n">S1</span><span class="o">.</span><span class="n">sID</span> <span class="o">&lt;</span> <span class="n">S1</span><span class="o">.</span><span class="n">sID</span><span class="p">;</span>    <span class="c1"># Note that &quot;!=&quot; is &quot;&lt;&gt;&quot; in SQL -&gt; using less-than to avoid doubles</span>
+<span class="c1">-- All pairs of students that have the same GPA:</span>
+<span class="k">select</span> <span class="n">S1</span><span class="p">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">S1</span><span class="p">.</span><span class="n">sName</span><span class="p">,</span> <span class="n">S1</span><span class="p">.</span><span class="n">GPA</span><span class="p">,</span> <span class="n">S2</span><span class="p">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">S2</span><span class="p">.</span><span class="n">sName</span><span class="p">,</span> <span class="n">S2</span><span class="p">.</span><span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="n">S1</span><span class="p">,</span> <span class="n">Student</span> <span class="n">S2</span>    <span class="c1">-- Repeated relation here -&gt; does cross product here (all possible pairs)</span>
+<span class="k">where</span> <span class="n">S1</span><span class="p">.</span><span class="n">GPA</span> <span class="o">=</span> <span class="n">S2</span><span class="p">.</span><span class="n">GPA</span> <span class="k">and</span> <span class="n">S1</span><span class="p">.</span><span class="n">sID</span> <span class="o">&lt;</span> <span class="n">S1</span><span class="p">.</span><span class="n">sID</span><span class="p">;</span>    <span class="c1">-- Note that &quot;!=&quot; is &quot;&lt;&gt;&quot; in SQL -&gt; using less-than to avoid doubles</span>
 </pre></div>
 
 </div>
@@ -14395,10 +14395,10 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">cName</span> <span class="k">as</span> <span class="n">name</span> <span class="kn">from</span> <span class="nn">College</span>    <span class="c1"># &quot;as&quot; statement specifies new attribute name</span>
-<span class="n">union</span> <span class="nb">all</span>    <span class="c1"># remove &quot;all&quot; statement to remove duplicates (in SQL, removing duplicates sorts entries)</span>
-<span class="n">select</span> <span class="n">sName</span> <span class="k">as</span> <span class="n">name</span> <span class="kn">from</span> <span class="nn">Student</span>    <span class="c1"># &quot;as&quot; statement specifies new attribute name</span>
-<span class="n">order</span> <span class="n">by</span> <span class="n">name</span><span class="p">;</span>    <span class="c1"># ensures sorted order</span>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">cName</span> <span class="k">as</span> <span class="n">name</span> <span class="k">from</span> <span class="n">College</span>    <span class="c1">-- &quot;as&quot; statement specifies new attribute name</span>
+<span class="k">union</span> <span class="k">all</span>    <span class="c1">-- remove &quot;all&quot; statement to remove duplicates (in SQL, removing duplicates sorts entries)</span>
+<span class="k">select</span> <span class="n">sName</span> <span class="k">as</span> <span class="n">name</span> <span class="k">from</span> <span class="n">Student</span>    <span class="c1">-- &quot;as&quot; statement specifies new attribute name</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">name</span><span class="p">;</span>    <span class="c1">-- ensures sorted order</span>
 </pre></div>
 
 </div>
@@ -14420,14 +14420,14 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">sID</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span>
-<span class="n">intersect</span>
-<span class="n">select</span> <span class="n">sID</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span>
+<span class="k">intersect</span>
+<span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span><span class="p">;</span>
 
-<span class="c1"># Some database systems don&#39;t support intersect operator: </span>
-<span class="n">select</span> <span class="n">distinct</span> <span class="n">A1</span><span class="o">.</span><span class="n">sID</span>    <span class="c1"># note the distinct here to remove duplicates</span>
-<span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">A1</span><span class="p">,</span> <span class="n">Apply</span> <span class="n">A2</span>     <span class="c1"># every pair of Apply tuples</span>
-<span class="n">where</span> <span class="n">A1</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">A2</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">A1</span><span class="o">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="ow">and</span> <span class="n">A2</span><span class="o">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span><span class="p">;</span>
+<span class="c1">-- Some database systems don&#39;t support intersect operator: </span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">A1</span><span class="p">.</span><span class="n">sID</span>    <span class="c1">-- note the distinct here to remove duplicates</span>
+<span class="k">from</span> <span class="n">Apply</span> <span class="n">A1</span><span class="p">,</span> <span class="n">Apply</span> <span class="n">A2</span>     <span class="c1">-- every pair of Apply tuples</span>
+<span class="k">where</span> <span class="n">A1</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">A2</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">A1</span><span class="p">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="k">and</span> <span class="n">A2</span><span class="p">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span><span class="p">;</span>
 </pre></div>
 
 </div>
@@ -14449,15 +14449,15 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="n">select</span> <span class="n">sId</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span>
+<div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">sId</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span>
 <span class="k">except</span>
-<span class="n">select</span> <span class="n">sID</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span>
+<span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span>
 
-<span class="c1"># Some database systems don&#39;t support except operator:</span>
-<span class="n">select</span> <span class="n">distinct</span> <span class="n">A1</span><span class="o">.</span><span class="n">sID</span>
-<span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">A1</span><span class="p">,</span> <span class="n">Apply</span> <span class="n">A2</span>
-<span class="n">where</span> <span class="n">A1</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">A2</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">A1</span><span class="o">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="ow">and</span> <span class="n">A2</span><span class="o">.</span><span class="n">major</span> <span class="o">&lt;&gt;</span> <span class="s1">&#39;EE&#39;</span><span class="p">;</span>
-<span class="c1"># THIS DOES NOT RETURN THE SAME AS ABOVE! RETRUNS sIDs BASED ON ALL MAJOR PAIRS, SO PASSES MORE PEOPLE THAN IT SHOULD. NOT ACTUALLY POSSIBLE TO WRITE DIFFERENCE WITHOUT EXCEPT OPERATOR WITH TOOLS SO FAR!</span>
+<span class="c1">-- Some database systems don&#39;t support except operator:</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">A1</span><span class="p">.</span><span class="n">sID</span>
+<span class="k">from</span> <span class="n">Apply</span> <span class="n">A1</span><span class="p">,</span> <span class="n">Apply</span> <span class="n">A2</span>
+<span class="k">where</span> <span class="n">A1</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">A2</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">A1</span><span class="p">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="k">and</span> <span class="n">A2</span><span class="p">.</span><span class="n">major</span> <span class="o">&lt;&gt;</span> <span class="s1">&#39;EE&#39;</span><span class="p">;</span>
+<span class="c1">-- THIS DOES NOT RETURN THE SAME AS ABOVE! RETRUNS sIDs BASED ON ALL MAJOR PAIRS, SO PASSES MORE PEOPLE THAN IT SHOULD. NOT ACTUALLY POSSIBLE TO WRITE DIFFERENCE WITHOUT EXCEPT OPERATOR WITH TOOLS SO FAR!</span>
 </pre></div>
 
 </div>
@@ -14478,15 +14478,15 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="c1"># Previous way to do it:</span>
-<span class="n">select</span> <span class="n">distinct</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">sName</span>    <span class="c1"># note the disambiguation here (both relations have sID attributes) </span>
-<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">Apply</span>
-<span class="n">where</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">Apply</span><span class="o">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">;</span>
+<div class="highlight"><pre><span></span><span class="c1">-- Previous way to do it:</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">sName</span>    <span class="c1">-- note the disambiguation here (both relations have sID attributes) </span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">Apply</span><span class="p">.</span><span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">;</span>
 
-<span class="c1"># New way to do it with subqueries in where clause (note this does not require the &quot;distinct&quot; like above)</span>
-<span class="n">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span>
-<span class="kn">from</span> <span class="nn">Student</span>
-<span class="n">where</span> <span class="n">sID</span> <span class="ow">in</span> <span class="p">(</span><span class="n">select</span> <span class="n">sID</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">);</span>
+<span class="c1">-- New way to do it with subqueries in where clause (note this does not require the &quot;distinct&quot; like above)</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">sID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">);</span>
 </pre></div>
 
 </div>
@@ -14517,15 +14517,15 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<div class="highlight"><pre><span></span><span class="c1"># This returns the 5 GPAS from 5 students who applied to CS at any school:</span>
-<span class="n">select</span> <span class="n">GPA</span>
-<span class="kn">from</span> <span class="nn">Student</span>
-<span class="n">where</span> <span class="n">sID</span> <span class="ow">in</span> <span class="p">(</span><span class="n">select</span> <span class="n">sID</span> <span class="kn">from</span> <span class="nn">Apply</span> <span class="nn">where</span> <span class="nn">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">);</span>
+<div class="highlight"><pre><span></span><span class="c1">-- This returns the 5 GPAS from 5 students who applied to CS at any school:</span>
+<span class="k">select</span> <span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">sID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">);</span>
 
-<span class="c1"># This returns duplicates (without &quot;distinct&quot;), but putting &quot;distinct&quot; eliminates equal GPAs! Neither good!</span>
-<span class="n">select</span> <span class="n">GPA</span>
-<span class="kn">from</span> <span class="nn">Student</span><span class="p">,</span> <span class="n">Apply</span>
-<span class="n">where</span> <span class="n">Student</span><span class="o">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="o">.</span><span class="n">sID</span> <span class="ow">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">;</span>
+<span class="c1">-- This returns duplicates (without &quot;distinct&quot;), but putting &quot;distinct&quot; eliminates equal GPAs! Neither good!</span>
+<span class="k">select</span> <span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">;</span>
 </pre></div>
 
 </div>
@@ -14544,7 +14544,7 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[NbConvertApp] Converting notebook DB5_SQL_Notes.ipynb to html
-[NbConvertApp] Writing 270670 bytes to DB5_SQL_Notes.html
+[NbConvertApp] Writing 456957 bytes to DB5_SQL_Notes.html
 </pre>
 </div>
 </div>
