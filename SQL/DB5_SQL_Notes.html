@@ -11779,7 +11779,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[12]:</div>
+<div class="prompt output_prompt">Out[1]:</div>
 
 
 
@@ -14729,7 +14729,127 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 </li>
 <li><p>E.g. min, max, sum, avg, count</p>
 </li>
+<li><p>New clauses: <strong>Group By</strong> and <strong>Having</strong></p>
+</li>
+<li><p>Examples:</p>
+</li>
 </ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Returns single value/tuple - average of GPA columns with attribute name &#39;avg(GPA)&#39;</span>
+<span class="k">select</span> <span class="k">avg</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">;</span>
+
+<span class="c1">-- Minimum GPA of students who&#39;ve applied for CS:</span>
+<span class="k">select</span> <span class="k">min</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">;</span>
+<span class="c1">-- Note that this query possibly returns multiple rows for a single student if they applied to many CS programs. This is problematic for calculating average GPA, etc.</span>
+
+<span class="c1">-- Use subqueries instead of joins for calculating averages (be careful with duplicates):</span>
+<span class="k">select</span> <span class="k">avg</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">sID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">);</span>
+
+<span class="c1">-- Number of students applying to Cornell - count(distinct) feature very useful!:</span>
+<span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">sID</span><span class="p">)</span>
+<span class="k">from</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">cName</span> <span class="o">=</span> <span class="s1">&#39;Cornell&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Students such that number of other students with same GPA is same as number of others with same sizeHS:</span>
+<span class="k">select</span> <span class="o">*</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="n">S1</span>
+<span class="k">where</span> <span class="p">(</span><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="n">Student</span> <span class="n">S2</span> <span class="k">where</span> <span class="n">S2</span><span class="p">.</span><span class="n">sID</span> <span class="o">&lt;&gt;</span><span class="n">S1</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">S2</span><span class="p">.</span><span class="n">GPA</span> <span class="o">=</span> <span class="n">S1</span><span class="p">.</span><span class="n">GPA</span><span class="p">)</span> <span class="o">=</span> 
+      <span class="p">(</span><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="n">Student</span> <span class="n">S2</span> <span class="k">where</span> <span class="n">S2</span><span class="p">.</span><span class="n">sID</span> <span class="o">&lt;&gt;</span><span class="n">S1</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">S2</span><span class="p">.</span><span class="n">sizeHS</span> <span class="o">=</span> <span class="n">S1</span><span class="p">.</span><span class="n">sizeHS</span><span class="p">);</span>
+
+<span class="c1">-- Amount average GPA of CS applicants exceeds average of non-CS applicants (good lord...):</span>
+<span class="k">select</span> <span class="n">CS</span><span class="p">.</span><span class="n">avgGPA</span> <span class="o">-</span> <span class="n">NonCS</span><span class="p">.</span><span class="n">avgGPA</span>
+<span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="k">avg</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span> <span class="k">as</span> <span class="n">avgGPA</span> 
+      <span class="k">from</span> <span class="n">Student</span> 
+      <span class="k">where</span> <span class="n">sID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">CS</span><span class="p">,</span>
+     <span class="p">(</span><span class="k">select</span> <span class="k">avg</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span> <span class="k">as</span> <span class="n">avgGPA</span> 
+      <span class="k">from</span> <span class="n">Student</span> 
+      <span class="k">where</span> <span class="n">sID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">))</span> <span class="k">as</span> <span class="n">NonCS</span><span class="p">;</span>
+
+<span class="c1">-- Same result with subquery in Select clause:</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="p">(</span><span class="k">select</span> <span class="k">avg</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span> <span class="k">as</span> <span class="n">avgGPA</span> 
+                 <span class="k">from</span> <span class="n">Student</span> 
+                 <span class="k">where</span> <span class="n">sID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">))</span> <span class="o">-</span>
+                <span class="p">(</span><span class="k">select</span> <span class="k">avg</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span> <span class="k">as</span> <span class="n">avgGPA</span> 
+                 <span class="k">from</span> <span class="n">Student</span> 
+                 <span class="k">where</span> <span class="n">sID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">))</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Group by</strong> clause: used only in conjunction with aggregation, partitions relation by values of specific attribute(s)</p>
+<ul>
+<li>Different than <em>order by</em></li>
+<li>Examples:</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Number of applications to each college using group by:</span>
+<span class="k">select</span> <span class="n">cName</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="k">from</span> <span class="n">Apply</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">cName</span><span class="p">;</span>
+
+<span class="c1">-- Total enrollment for college student in each state:</span>
+<span class="k">select</span> <span class="k">state</span><span class="p">,</span> <span class="k">sum</span><span class="p">(</span><span class="n">enrollment</span><span class="p">)</span>
+<span class="k">from</span> <span class="n">College</span>
+<span class="k">group</span> <span class="k">by</span> <span class="k">state</span><span class="p">;</span>
+
+<span class="c1">-- Min/max GPAs of applicants to each college and major - can group by multiple attributes!</span>
+<span class="k">select</span> <span class="n">cName</span><span class="p">,</span> <span class="n">major</span><span class="p">,</span> <span class="k">min</span><span class="p">(</span><span class="n">GPA</span><span class="p">),</span> <span class="k">max</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">cName</span><span class="p">,</span> <span class="n">major</span><span class="p">;</span>
+
+<span class="c1">-- STOPPED AT 13:40!</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Count</strong> function: returns the number of tuples in result (rows)</p>
+<ul>
+<li>Examples:</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Number of colleges with enrollment larger than 15,000 (returns single tuple with attribute &#39;count(*)&#39;):</span>
+<span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="k">from</span> <span class="n">College</span>
+<span class="k">where</span> <span class="n">enrollment</span> <span class="o">&gt;</span> <span class="mi">15000</span><span class="p">;</span>
+</pre></div>
 
 </div>
 </div>
@@ -14747,7 +14867,7 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[NbConvertApp] Converting notebook DB5_SQL_Notes.ipynb to html
-[NbConvertApp] Writing 290315 bytes to DB5_SQL_Notes.html
+[NbConvertApp] Writing 487922 bytes to DB5_SQL_Notes.html
 </pre>
 </div>
 </div>
