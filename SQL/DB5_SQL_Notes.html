@@ -14724,6 +14724,53 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 </div>
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="The-JOIN-Family-of-Operators">The JOIN Family of Operators<a class="anchor-link" href="#The-JOIN-Family-of-Operators">&#182;</a></h3><ul>
+<li><p>In "From" clause, list relations (tables), and this is implicitly a cross product of those tables</p>
+</li>
+<li><p>Can instead have explicit join of relations (tables) following relational algebra</p>
+<ul>
+<li>Theta Join $\to$ "Inner Join On [condition]": take cross product but only keep tuples satisfying condition (note the "Inner" is optional)</li>
+<li>Natural Join $\to$ "Natural Join": requires values in same columns to be equal to keep the tuple in the cross product &amp; eliminates duplicate columns</li>
+<li>Explicit Natural Join $\to$ "Inner Join Using([attributes]): same as natural join, explicitly listing columns to be equated</li>
+<li>Outer Join $\to$ "Left/Right/Full Outer Join": combines tuples similar to theta join except tuples not matching condition are kept and filled with null vals</li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Theta/Inner join example:</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">sName</span><span class="p">,</span> <span class="n">major</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="k">join</span> <span class="n">Apply</span>
+<span class="k">on</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span><span class="p">;</span>
+
+<span class="c1">-- This is the same as this, which is a natural join:</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">sName</span><span class="p">,</span> <span class="n">majoe</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span>
+
+<span class="c1">-- Students from &lt;1000 person high schools who applied to CS at Stanford:</span>
+<span class="k">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="k">join</span> <span class="n">Apply</span>    <span class="c1">-- theta join here</span>
+<span class="k">on</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span>
+<span class="k">where</span> <span class="n">sizeHS</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="k">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="k">and</span> <span class="n">cName</span> <span class="o">=</span> <span class="s1">&#39;Stanford&#39;</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h3 id="Aggregation:">Aggregation:<a class="anchor-link" href="#Aggregation:">&#182;</a></h3><ul>
 <li><p>Functions that perform computation on sets of values (multiple rows in a relation)</p>
 </li>
@@ -14867,7 +14914,7 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[NbConvertApp] Converting notebook DB5_SQL_Notes.ipynb to html
-[NbConvertApp] Writing 487922 bytes to DB5_SQL_Notes.html
+[NbConvertApp] Writing 491501 bytes to DB5_SQL_Notes.html
 </pre>
 </div>
 </div>
