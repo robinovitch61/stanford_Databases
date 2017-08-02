@@ -11779,7 +11779,7 @@ div#notebook {
 
 <div class="output_area">
 
-<div class="prompt output_prompt">Out[6]:</div>
+<div class="prompt output_prompt">Out[1]:</div>
 
 
 
@@ -14732,8 +14732,17 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 <li>Theta Join $\to$ "Inner Join On [condition]": take cross product but only keep tuples satisfying condition (note the "Inner" is optional)</li>
 <li>Natural Join $\to$ "Natural Join": requires values in same columns to be equal to keep the tuple in the cross product &amp; eliminates duplicate columns</li>
 <li>Explicit Natural Join $\to$ "Inner Join Using([attributes]): same as natural join, explicitly listing columns to be equated</li>
-<li>Outer Join $\to$ "Left/Right/Full Outer Join": combines tuples similar to theta join except tuples not matching condition are kept and filled with null vals</li>
+<li>Outer Join $\to$ "Left/Right/Full Outer Join": combines tuples similar to theta join except tuples not matching condition are kept and filled with null vals
+<br><br></li>
 </ul>
+</li>
+<li><p>Note that right/left/full outer joins are NOT associative</p>
+<ul>
+<li>i.e. A outer join (B outer join C) != (A outer join B) outer join C
+<br><br></li>
+</ul>
+</li>
+<li><p>Examples:</p>
 </li>
 </ul>
 
@@ -14746,18 +14755,27 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 <div class="text_cell_render border-box-sizing rendered_html">
 <div class="highlight"><pre><span></span><span class="c1">-- Theta/Inner join example:</span>
 <span class="k">select</span> <span class="k">distinct</span> <span class="n">sName</span><span class="p">,</span> <span class="n">major</span>
-<span class="k">from</span> <span class="n">Student</span> <span class="k">join</span> <span class="n">Apply</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="k">inner</span> <span class="k">join</span> <span class="n">Apply</span>    <span class="c1">-- inner is unnecessary here</span>
 <span class="k">on</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span><span class="p">;</span>
 
-<span class="c1">-- This is the same as this, which is a natural join:</span>
-<span class="k">select</span> <span class="k">distinct</span> <span class="n">sName</span><span class="p">,</span> <span class="n">majoe</span>
+<span class="c1">-- This is the same as this:</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">sName</span><span class="p">,</span> <span class="n">major</span>
 <span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
-<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span><span class="p">;</span>
+
+<span class="c1">-- And the same as this (natural join):</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">sName</span><span class="p">,</span> <span class="n">major</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="k">natural</span> <span class="k">join</span> <span class="n">Apply</span><span class="p">;</span>    <span class="c1">-- note that this eliminates duplicate attributes</span>
 
 <span class="c1">-- Students from &lt;1000 person high schools who applied to CS at Stanford:</span>
 <span class="k">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span>
 <span class="k">from</span> <span class="n">Student</span> <span class="k">join</span> <span class="n">Apply</span>    <span class="c1">-- theta join here</span>
 <span class="k">on</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span>
+<span class="k">where</span> <span class="n">sizeHS</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="k">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="k">and</span> <span class="n">cName</span> <span class="o">=</span> <span class="s1">&#39;Stanford&#39;</span><span class="p">;</span>
+
+<span class="c1">-- Equivalently with natural join:</span>
+<span class="k">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="k">natural</span> <span class="k">join</span> <span class="n">Apply</span>    <span class="c1">-- theta join here</span>
 <span class="k">where</span> <span class="n">sizeHS</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="k">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="k">and</span> <span class="n">cName</span> <span class="o">=</span> <span class="s1">&#39;Stanford&#39;</span><span class="p">;</span>
 
 <span class="c1">-- Joining 3 relations: 2 methods</span>
@@ -14767,15 +14785,40 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 <span class="k">where</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">Apply</span><span class="p">.</span><span class="n">cName</span> <span class="o">=</span> <span class="n">College</span><span class="p">.</span><span class="n">cName</span><span class="p">;</span>
     <span class="c1">-- With Join:</span>
 <span class="k">select</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span><span class="p">,</span> <span class="n">Apply</span><span class="p">.</span><span class="n">cName</span><span class="p">,</span> <span class="n">enrollment</span>
-<span class="k">from</span> <span class="n">Apply</span> <span class="k">join</span> <span class="n">Student</span> <span class="k">join</span> <span class="n">College</span>
-<span class="k">on</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="k">and</span> <span class="n">Apply</span><span class="p">.</span><span class="n">cName</span> <span class="o">=</span> <span class="n">College</span><span class="p">.</span><span class="n">cName</span><span class="p">;</span>
+<span class="k">from</span> <span class="p">(</span><span class="n">Apply</span> <span class="k">join</span> <span class="n">Student</span> <span class="k">on</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span><span class="p">)</span> <span class="k">join</span> <span class="n">College</span> <span class="c1">-- weirdness here to adhere to binary join</span>
+<span class="k">on</span> <span class="n">Apply</span><span class="p">.</span><span class="n">cName</span> <span class="o">=</span> <span class="n">College</span><span class="p">.</span><span class="n">cName</span><span class="p">;</span>
+
+<span class="c1">-- Rather than natural join, best practice is to use &quot;using&quot; clause:</span>
+<span class="k">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="k">join</span> <span class="n">Apply</span> <span class="k">using</span><span class="p">(</span><span class="n">sID</span><span class="p">)</span>    <span class="c1">-- explicitly calls out attributes appearing in both relations</span>
+<span class="k">where</span> <span class="n">sizeHS</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="k">and</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span> <span class="k">and</span> <span class="n">cName</span> <span class="o">=</span> <span class="s1">&#39;Stanford&#39;</span><span class="p">;</span>
+
+<span class="c1">-- All pairs of students that have the same GPA with join and &quot;using&quot; clause:</span>
+<span class="k">select</span> <span class="n">S1</span><span class="p">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">S1</span><span class="p">.</span><span class="n">sName</span><span class="p">,</span> <span class="n">S1</span><span class="p">.</span><span class="n">GPA</span><span class="p">,</span> <span class="n">S2</span><span class="p">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">S2</span><span class="p">.</span><span class="n">sName</span><span class="p">,</span> <span class="n">S2</span><span class="p">.</span><span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="n">S1</span> <span class="k">join</span> <span class="n">Student</span> <span class="n">S2</span> <span class="k">using</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span>
+<span class="k">where</span> <span class="n">S1</span><span class="p">.</span><span class="n">sID</span> <span class="o">&lt;</span> <span class="n">S1</span><span class="p">.</span><span class="n">sID</span><span class="p">;</span>    <span class="c1">-- note; can&#39;t have &quot;on&quot; clause with &quot;using&quot; clause</span>
+
+<span class="c1">-- Outer join: includes non-matching tuples on join padded with null values:</span>
+    <span class="c1">-- Example: this query includes Students who do not appear in Apply relation (haven&#39;t applied anywhere):</span>
+<span class="k">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">sID</span><span class="p">,</span> <span class="n">cName</span><span class="p">,</span> <span class="n">major</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="k">left</span> <span class="k">outer</span> <span class="k">join</span> <span class="n">Apply</span> <span class="k">using</span><span class="p">(</span><span class="n">sID</span><span class="p">);</span>    <span class="c1">-- left -&gt; include dangling Student tuples (left relation)</span>
+
+<span class="c1">-- This is the same as this:</span>
+<span class="k">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">sID</span><span class="p">,</span> <span class="n">cName</span><span class="p">,</span> <span class="n">major</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span>
+<span class="k">union</span>
+<span class="k">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">sID</span><span class="p">,</span> <span class="k">NULL</span><span class="p">,</span> <span class="k">NULL</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">sID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span><span class="p">);</span>
+
+<span class="c1">-- Possible to take unmatched tuples from both relations using &quot;full outer join&quot; (union left &amp; right joins):</span>
+<span class="k">select</span> <span class="n">sName</span><span class="p">,</span> <span class="n">sID</span><span class="p">,</span> <span class="n">cName</span><span class="p">,</span> <span class="n">major</span>
+<span class="k">from</span> <span class="n">Student</span> <span class="k">full</span> <span class="k">outer</span> <span class="k">join</span> <span class="n">Apply</span> <span class="k">using</span><span class="p">(</span><span class="n">sID</span><span class="p">);</span>
 </pre></div>
 
 </div>
 </div>
-</div>
-<div class="cell border-box-sizing code_cell rendered">
-
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
 </div>
@@ -14924,7 +14967,7 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[NbConvertApp] Converting notebook DB5_SQL_Notes.ipynb to html
-[NbConvertApp] Writing 493655 bytes to DB5_SQL_Notes.html
+[NbConvertApp] Writing 500068 bytes to DB5_SQL_Notes.html
 </pre>
 </div>
 </div>
