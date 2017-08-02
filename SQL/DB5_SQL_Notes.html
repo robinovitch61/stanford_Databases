@@ -14917,13 +14917,18 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 <span class="k">from</span> <span class="n">College</span>
 <span class="k">group</span> <span class="k">by</span> <span class="k">state</span><span class="p">;</span>
 
-<span class="c1">-- Min/max GPAs of applicants to each college and major - can group by multiple attributes!</span>
+<span class="c1">-- Min/max GPAs of applicants to each college and major - can group by multiple attributes:</span>
 <span class="k">select</span> <span class="n">cName</span><span class="p">,</span> <span class="n">major</span><span class="p">,</span> <span class="k">min</span><span class="p">(</span><span class="n">GPA</span><span class="p">),</span> <span class="k">max</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span>
 <span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
 <span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span>
 <span class="k">group</span> <span class="k">by</span> <span class="n">cName</span><span class="p">,</span> <span class="n">major</span><span class="p">;</span>
 
-<span class="c1">-- STOPPED AT 13:40!</span>
+<span class="c1">-- Largest spread of GPAs of applicants to each college and major:</span>
+<span class="k">select</span> <span class="k">max</span><span class="p">(</span><span class="n">mx</span> <span class="o">-</span> <span class="n">mn</span><span class="p">)</span>
+<span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">cName</span><span class="p">,</span> <span class="n">major</span><span class="p">,</span> <span class="k">min</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span> <span class="k">as</span> <span class="n">mn</span><span class="p">,</span> <span class="n">mx</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span> <span class="k">max</span>  <span class="c1">-- can optionally use &quot;as&quot;</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">cName</span><span class="p">,</span> <span class="n">major</span><span class="p">)</span> <span class="n">M</span><span class="p">;</span>
 </pre></div>
 
 </div>
@@ -14949,6 +14954,300 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 <span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
 <span class="k">from</span> <span class="n">College</span>
 <span class="k">where</span> <span class="n">enrollment</span> <span class="o">&gt;</span> <span class="mi">15000</span><span class="p">;</span>
+
+<span class="c1">-- Number of colleges applied to by each student:</span>
+<span class="k">select</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">cName</span><span class="p">)</span>    <span class="c1">-- note &quot;sName&quot; is OK here ONLY b/c names are = in group</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span>
+<span class="k">union</span>    <span class="c1">-- second part finds and returns students who didn&#39;t apply anywhere</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="mi">0</span><span class="p">;</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">sID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span><span class="p">);</span>
+    <span class="c1">-- If you selected something like cName where not all values are equal in group, returns RANDOM college</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Having</strong> clause: used in conjunction with aggregation</p>
+<ul>
+<li><p>Apply conditions to the result of aggregate functions</p>
+</li>
+<li><p>"Having" clause is applied after "group by" and applies to whole group; "where" clause applies to one tuple at a time</p>
+</li>
+<li>Examples:</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Colleges with fewer than 5 applicants</span>
+<span class="k">select</span> <span class="n">cName</span>
+<span class="k">from</span> <span class="n">Apply</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">cName</span>
+<span class="k">having</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="c1">-- Another (dumber) way to do this without &quot;having&quot;:</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">cName</span>
+<span class="k">from</span> <span class="n">Apply</span> <span class="n">A1</span>
+<span class="k">where</span> <span class="mi">5</span> <span class="o">&gt;</span> <span class="p">(</span><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="n">Apply</span> <span class="n">A2</span> <span class="k">where</span> <span class="n">A2</span><span class="p">.</span><span class="n">cName</span> <span class="o">=</span> <span class="n">A1</span><span class="p">.</span><span class="n">cName</span><span class="p">);</span>
+
+<span class="c1">-- Number of colleges with fewer than 5 applicants:</span>
+<span class="k">select</span> <span class="n">cName</span>
+<span class="k">from</span> <span class="n">Apply</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">cName</span>
+<span class="k">having</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">sID</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">;</span>
+
+<span class="c1">-- All majors whose applicant&#39;s maximum GPA is lower than the average student GPA:</span>
+<span class="k">select</span> <span class="n">major</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">,</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">Student</span><span class="p">.</span><span class="n">sID</span> <span class="o">=</span> <span class="n">Apply</span><span class="p">.</span><span class="n">sID</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">major</span>
+<span class="k">having</span> <span class="k">max</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span> <span class="o">&lt;</span> <span class="p">(</span><span class="k">select</span> <span class="k">avg</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span> <span class="k">from</span> <span class="n">Student</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="NULL-Values:">NULL Values:<a class="anchor-link" href="#NULL-Values:">&#182;</a></h3><ul>
+<li><p>Represents undefined or unknown values</p>
+</li>
+<li><p>Shows up as blank or missing values in database interface</p>
+</li>
+<li><p>"is null" is a phrase/keyword in SQL that matches values that are null</p>
+</li>
+<li><p>SQL uses three-valued logic for conditions: True, False or Unknown. Unknown values are not returned in the query</p>
+</li>
+<li><p>Examples:</p>
+</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Given relation where some students have NULL GPAs, they will not show up in this query:</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">GPA</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">.</span><span class="mi">5</span> <span class="k">or</span> <span class="n">GPA</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">.</span><span class="mi">5</span><span class="p">;</span>
+
+<span class="c1">-- BUT they will show up here:</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="n">sName</span><span class="p">,</span> <span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">GPA</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">.</span><span class="mi">5</span> <span class="k">or</span> <span class="n">GPA</span> <span class="o">&lt;=</span> <span class="mi">3</span><span class="p">.</span><span class="mi">5</span> <span class="k">or</span> <span class="n">GPA</span> <span class="k">is</span> <span class="k">null</span><span class="p">;</span>
+
+<span class="c1">-- Number of students with non-null GPAs:</span>
+<span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">GPA</span> <span class="k">is</span> <span class="k">not</span> <span class="k">null</span><span class="p">;</span>
+
+<span class="c1">-- Number of distinct, non-null GPAs:</span>
+<span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">GPA</span><span class="p">)</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">GPA</span> <span class="k">is</span> <span class="k">not</span> <span class="k">null</span><span class="p">;</span>
+
+<span class="c1">-- Note that this counts non-null GPAs (excludes condition from above):</span>
+<span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">GPA</span><span class="p">)</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">;</span>
+
+<span class="c1">-- But this returns distinct non-null GPAs as well as the null GPA:</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">GPA</span>
+<span class="k">from</span> <span class="n">Student</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Data-Modification-Statements:">Data Modification Statements:<a class="anchor-link" href="#Data-Modification-Statements:">&#182;</a></h3><ul>
+<li>Inserting, deleting, and updating existing data</li>
+</ul>
+<p><strong>Inserting Data:</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Insert one new tuple into the table with the specified values:</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="p">[</span><span class="k">Table</span><span class="p">]</span> <span class="k">values</span><span class="p">(</span><span class="n">A1</span><span class="p">,</span> <span class="n">A2</span><span class="p">,</span> <span class="p">...</span> <span class="p">,</span> <span class="n">An</span><span class="p">)</span>
+
+<span class="c1">-- Insert set of tuples into table (as long as select returns set of tuples with same schema i.e. columns):</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="p">[</span><span class="k">Table</span><span class="p">]</span> <span class="p">[</span><span class="n">SelectStatement</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Examples:</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Insert single tuple</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">College</span> <span class="k">values</span> <span class="p">(</span><span class="s1">&#39;Carnegie Mellon&#39;</span><span class="p">,</span> <span class="s1">&#39;PA&#39;</span><span class="p">,</span> <span class="mi">11500</span><span class="p">);</span>
+
+<span class="c1">-- Have students who haven&#39;t applied anywhere apply to Carnegie Melon for CS:</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Apply</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="s1">&#39;Carnegie Mellon&#39;</span><span class="p">,</span> <span class="s1">&#39;CS&#39;</span><span class="p">,</span> <span class="k">null</span>
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">sID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span><span class="p">);</span>
+
+<span class="c1">-- Admit to Carnegie Melon all students who applied to EE elsewhere and were rejected:</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Apply</span>
+<span class="k">select</span> <span class="n">sID</span><span class="p">,</span> <span class="s1">&#39;Carnegie Mellon&#39;</span><span class="p">,</span> <span class="s1">&#39;CS&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span> 
+<span class="k">from</span> <span class="n">Student</span>
+<span class="k">where</span> <span class="n">sID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span> <span class="k">and</span> <span class="n">decision</span> <span class="o">=</span> <span class="s1">&#39;N&#39;</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Deleting Data:</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Delete tuples from table where certain condition is true:</span>
+<span class="k">delete</span> <span class="k">from</span> <span class="k">table</span> <span class="k">where</span> <span class="p">[</span><span class="n">Condition</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Examples:</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Delete all students who applied to more than 2 majors:</span>
+<span class="k">delete</span> <span class="k">from</span> <span class="n">Apply</span>
+<span class="k">where</span> <span class="n">sID</span> <span class="k">in</span> 
+<span class="p">(</span><span class="k">select</span> <span class="n">sID</span>
+<span class="k">from</span> <span class="n">Apply</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">sID</span>
+<span class="k">having</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">major</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">);</span>
+    <span class="c1">-- Note: some database systems don&#39;t allow deletions from the same relation you are subquerying</span>
+    <span class="c1">-- Instead, create temporary table for reference that is copy of table (e.g. Apply_Copy)</span>
+
+<span class="c1">-- Delete colleges with no CS applicants:</span>
+<span class="k">delete</span> <span class="k">from</span> <span class="n">College</span>
+<span class="k">where</span> <span class="n">cName</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">cName</span> <span class="k">from</span> <span class="n">College</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CS&#39;</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>Updating Existing Data:</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Take specified attribute and reassign it to have the value that&#39;s result of expression:</span>
+<span class="k">update</span> <span class="p">[</span><span class="k">Table</span><span class="p">]</span>
+<span class="k">set</span> <span class="p">[</span><span class="n">Attr</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">Expression</span><span class="p">]</span>
+<span class="k">where</span> <span class="p">[</span><span class="n">Condition</span><span class="p">]</span>
+
+<span class="c1">-- Similarly with multiple attributes:</span>
+<span class="k">update</span> <span class="p">[</span><span class="k">Table</span><span class="p">]</span>
+<span class="k">set</span> <span class="p">[</span><span class="n">A1</span> <span class="o">=</span> <span class="n">Expr1</span><span class="p">,</span> <span class="n">A2</span> <span class="o">=</span> <span class="n">Expr2</span><span class="p">,</span> <span class="p">...</span> <span class="p">,</span> <span class="n">An</span> <span class="o">=</span> <span class="n">Exprn</span><span class="p">]</span>
+<span class="k">where</span> <span class="p">[</span><span class="n">Condition</span><span class="p">]</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<ul>
+<li>Examples:</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="c1">-- Accept applicants to C.M. with GPA &lt; 3.6 but turn them into econ majors:</span>
+<span class="k">update</span> <span class="n">Apply</span>
+<span class="k">set</span> <span class="n">decision</span> <span class="o">=</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;economics&#39;</span>
+<span class="k">where</span> <span class="n">cName</span> <span class="o">=</span> <span class="s1">&#39;Carnegie Mellon&#39;</span> <span class="k">and</span> <span class="n">sID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Student</span> <span class="k">where</span> <span class="n">GPA</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">.</span><span class="mi">6</span><span class="p">);</span>
+
+<span class="c1">-- Change students with highest GPA in EE to CS major (LOL):</span>
+<span class="k">update</span> <span class="n">Apply</span>
+<span class="k">set</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;CSE&#39;</span>
+<span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span> <span class="k">and</span> <span class="n">sID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Student</span> 
+                               <span class="k">where</span> <span class="n">GPA</span> <span class="o">&gt;=</span> <span class="k">all</span> <span class="p">(</span><span class="k">select</span> <span class="n">GPA</span> <span class="k">from</span> <span class="n">Student</span>
+                                                 <span class="k">where</span> <span class="n">sID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">sID</span> <span class="k">from</span> <span class="n">Apply</span> <span class="k">where</span> <span class="n">major</span> <span class="o">=</span> <span class="s1">&#39;EE&#39;</span><span class="p">)));</span>
+
+<span class="c1">-- Give every student the highest GPA and smallest highschool:</span>
+<span class="k">update</span> <span class="n">Student</span>
+<span class="k">set</span> <span class="n">GPA</span> <span class="o">=</span> <span class="p">(</span><span class="k">select</span> <span class="k">max</span><span class="p">(</span><span class="n">GPA</span><span class="p">)</span> <span class="k">from</span> <span class="n">Student</span><span class="p">),</span> <span class="n">sizeHS</span> <span class="o">=</span> <span class="p">(</span><span class="k">select</span> <span class="k">min</span><span class="p">(</span><span class="n">sizeHS</span><span class="p">)</span> <span class="k">from</span> <span class="n">Student</span><span class="p">);</span>
+
+<span class="c1">-- Accept everyone:</span>
+<span class="k">update</span> <span class="n">Apply</span>
+<span class="k">set</span> <span class="n">decision</span> <span class="o">=</span> <span class="s1">&#39;Y&#39;</span>
 </pre></div>
 
 </div>
@@ -14967,7 +15266,7 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[NbConvertApp] Converting notebook DB5_SQL_Notes.ipynb to html
-[NbConvertApp] Writing 500068 bytes to DB5_SQL_Notes.html
+[NbConvertApp] Writing 522931 bytes to DB5_SQL_Notes.html
 </pre>
 </div>
 </div>
