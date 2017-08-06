@@ -15277,6 +15277,532 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Exercise-1:-Movie-Reviews">Exercise 1: Movie Reviews<a class="anchor-link" href="#Exercise-1:-Movie-Reviews">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="rating.sql">rating.sql<a class="anchor-link" href="#rating.sql">&#182;</a></h2><div class="highlight"><pre><span></span><span class="cm">/* Delete the tables if they already exist */</span>
+<span class="k">drop</span> <span class="k">table</span> <span class="k">if</span> <span class="k">exists</span> <span class="n">Movie</span><span class="p">;</span>
+<span class="k">drop</span> <span class="k">table</span> <span class="k">if</span> <span class="k">exists</span> <span class="n">Reviewer</span><span class="p">;</span>
+<span class="k">drop</span> <span class="k">table</span> <span class="k">if</span> <span class="k">exists</span> <span class="n">Rating</span><span class="p">;</span>
+
+<span class="cm">/* Create the schema for our tables */</span>
+<span class="k">create</span> <span class="k">table</span> <span class="n">Movie</span><span class="p">(</span><span class="n">mID</span> <span class="nb">int</span><span class="p">,</span> <span class="n">title</span> <span class="nb">text</span><span class="p">,</span> <span class="k">year</span> <span class="nb">int</span><span class="p">,</span> <span class="n">director</span> <span class="nb">text</span><span class="p">);</span>
+<span class="k">create</span> <span class="k">table</span> <span class="n">Reviewer</span><span class="p">(</span><span class="n">rID</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span> <span class="nb">text</span><span class="p">);</span>
+<span class="k">create</span> <span class="k">table</span> <span class="n">Rating</span><span class="p">(</span><span class="n">rID</span> <span class="nb">int</span><span class="p">,</span> <span class="n">mID</span> <span class="nb">int</span><span class="p">,</span> <span class="n">stars</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ratingDate</span> <span class="nb">date</span><span class="p">);</span>
+
+<span class="cm">/* Populate the tables with our data */</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Movie</span> <span class="k">values</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span> <span class="s1">&#39;Gone with the Wind&#39;</span><span class="p">,</span> <span class="mi">1939</span><span class="p">,</span> <span class="s1">&#39;Victor Fleming&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Movie</span> <span class="k">values</span><span class="p">(</span><span class="mi">102</span><span class="p">,</span> <span class="s1">&#39;Star Wars&#39;</span><span class="p">,</span> <span class="mi">1977</span><span class="p">,</span> <span class="s1">&#39;George Lucas&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Movie</span> <span class="k">values</span><span class="p">(</span><span class="mi">103</span><span class="p">,</span> <span class="s1">&#39;The Sound of Music&#39;</span><span class="p">,</span> <span class="mi">1965</span><span class="p">,</span> <span class="s1">&#39;Robert Wise&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Movie</span> <span class="k">values</span><span class="p">(</span><span class="mi">104</span><span class="p">,</span> <span class="s1">&#39;E.T.&#39;</span><span class="p">,</span> <span class="mi">1982</span><span class="p">,</span> <span class="s1">&#39;Steven Spielberg&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Movie</span> <span class="k">values</span><span class="p">(</span><span class="mi">105</span><span class="p">,</span> <span class="s1">&#39;Titanic&#39;</span><span class="p">,</span> <span class="mi">1997</span><span class="p">,</span> <span class="s1">&#39;James Cameron&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Movie</span> <span class="k">values</span><span class="p">(</span><span class="mi">106</span><span class="p">,</span> <span class="s1">&#39;Snow White&#39;</span><span class="p">,</span> <span class="mi">1937</span><span class="p">,</span> <span class="k">null</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Movie</span> <span class="k">values</span><span class="p">(</span><span class="mi">107</span><span class="p">,</span> <span class="s1">&#39;Avatar&#39;</span><span class="p">,</span> <span class="mi">2009</span><span class="p">,</span> <span class="s1">&#39;James Cameron&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Movie</span> <span class="k">values</span><span class="p">(</span><span class="mi">108</span><span class="p">,</span> <span class="s1">&#39;Raiders of the Lost Ark&#39;</span><span class="p">,</span> <span class="mi">1981</span><span class="p">,</span> <span class="s1">&#39;Steven Spielberg&#39;</span><span class="p">);</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Reviewer</span> <span class="k">values</span><span class="p">(</span><span class="mi">201</span><span class="p">,</span> <span class="s1">&#39;Sarah Martinez&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Reviewer</span> <span class="k">values</span><span class="p">(</span><span class="mi">202</span><span class="p">,</span> <span class="s1">&#39;Daniel Lewis&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Reviewer</span> <span class="k">values</span><span class="p">(</span><span class="mi">203</span><span class="p">,</span> <span class="s1">&#39;Brittany Harris&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Reviewer</span> <span class="k">values</span><span class="p">(</span><span class="mi">204</span><span class="p">,</span> <span class="s1">&#39;Mike Anderson&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Reviewer</span> <span class="k">values</span><span class="p">(</span><span class="mi">205</span><span class="p">,</span> <span class="s1">&#39;Chris Jackson&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Reviewer</span> <span class="k">values</span><span class="p">(</span><span class="mi">206</span><span class="p">,</span> <span class="s1">&#39;Elizabeth Thomas&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Reviewer</span> <span class="k">values</span><span class="p">(</span><span class="mi">207</span><span class="p">,</span> <span class="s1">&#39;James Cameron&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Reviewer</span> <span class="k">values</span><span class="p">(</span><span class="mi">208</span><span class="p">,</span> <span class="s1">&#39;Ashley White&#39;</span><span class="p">);</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">201</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;2011-01-22&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">201</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;2011-01-27&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">202</span><span class="p">,</span> <span class="mi">106</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="k">null</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">203</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;2011-01-20&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">203</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">&#39;2011-01-12&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">203</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;2011-01-30&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">204</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;2011-01-09&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">205</span><span class="p">,</span> <span class="mi">103</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;2011-01-27&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">205</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;2011-01-22&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">205</span><span class="p">,</span> <span class="mi">108</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="k">null</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">206</span><span class="p">,</span> <span class="mi">107</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;2011-01-15&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">206</span><span class="p">,</span> <span class="mi">106</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;2011-01-19&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">207</span><span class="p">,</span> <span class="mi">107</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">&#39;2011-01-20&#39;</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Rating</span> <span class="k">values</span><span class="p">(</span><span class="mi">208</span><span class="p">,</span> <span class="mi">104</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;2011-01-02&#39;</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Query-Exercises:">Query Exercises:<a class="anchor-link" href="#Query-Exercises:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q1:-Find-the-titles-of-all-movies-directed-by-Steven-Spielberg.">Q1: Find the titles of all movies directed by Steven Spielberg.<a class="anchor-link" href="#Q1:-Find-the-titles-of-all-movies-directed-by-Steven-Spielberg.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">title</span>
+<span class="k">from</span> <span class="n">Movie</span>
+<span class="k">where</span> <span class="n">director</span> <span class="o">=</span> <span class="s1">&#39;Steven Spielberg&#39;</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q2:-Find-all-years-that-have-a-movie-that-received-a-rating-of-4-or-5,-and-sort-them-in-increasing-order.">Q2: Find all years that have a movie that received a rating of 4 or 5, and sort them in increasing order.<a class="anchor-link" href="#Q2:-Find-all-years-that-have-a-movie-that-received-a-rating-of-4-or-5,-and-sort-them-in-increasing-order.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="k">distinct</span> <span class="n">Movie</span><span class="p">.</span><span class="k">year</span>
+<span class="k">from</span> <span class="n">Movie</span> <span class="k">join</span> <span class="n">Rating</span> <span class="k">using</span><span class="p">(</span><span class="n">mID</span><span class="p">)</span>
+<span class="k">where</span> <span class="n">Rating</span><span class="p">.</span><span class="n">stars</span> <span class="o">=</span> <span class="mi">4</span> <span class="k">or</span> <span class="n">Rating</span><span class="p">.</span><span class="n">stars</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">Movie</span><span class="p">.</span><span class="k">year</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q3:-Find-the-titles-of-all-movies-that-have-no-ratings.">Q3: Find the titles of all movies that have no ratings.<a class="anchor-link" href="#Q3:-Find-the-titles-of-all-movies-that-have-no-ratings.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">title</span>
+<span class="k">from</span> <span class="n">movie</span>
+<span class="k">where</span> <span class="n">mID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">mID</span> <span class="k">from</span> <span class="n">rating</span> <span class="k">where</span> <span class="n">stars</span> <span class="k">not</span> <span class="k">null</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q4:-Some-reviewers-didn't-provide-a-date-with-their-rating.-Find-the-names-of-all-reviewers-who-have-ratings-with-a-NULL-value-for-the-date.">Q4: Some reviewers didn't provide a date with their rating. Find the names of all reviewers who have ratings with a NULL value for the date.<a class="anchor-link" href="#Q4:-Some-reviewers-didn't-provide-a-date-with-their-rating.-Find-the-names-of-all-reviewers-who-have-ratings-with-a-NULL-value-for-the-date.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">reviewer</span><span class="p">.</span><span class="n">name</span>
+<span class="k">from</span> <span class="n">reviewer</span> <span class="k">join</span> <span class="n">rating</span> <span class="k">using</span><span class="p">(</span><span class="n">rID</span><span class="p">)</span>
+<span class="k">where</span> <span class="n">ratingDate</span> <span class="k">is</span> <span class="k">null</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q5:-Write-a-query-to-return-the-ratings-data-in-a-more-readable-format:-reviewer-name,-movie-title,-stars,-and-ratingDate.-Also,-sort-the-data,-first-by-reviewer-name,-then-by-movie-title,-and-lastly-by-number-of-stars.">Q5: Write a query to return the ratings data in a more readable format: reviewer name, movie title, stars, and ratingDate. Also, sort the data, first by reviewer name, then by movie title, and lastly by number of stars.<a class="anchor-link" href="#Q5:-Write-a-query-to-return-the-ratings-data-in-a-more-readable-format:-reviewer-name,-movie-title,-stars,-and-ratingDate.-Also,-sort-the-data,-first-by-reviewer-name,-then-by-movie-title,-and-lastly-by-number-of-stars.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">reviewer</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">movie</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="n">rating</span><span class="p">.</span><span class="n">stars</span><span class="p">,</span> <span class="n">rating</span><span class="p">.</span><span class="n">ratingDate</span>
+<span class="k">from</span> <span class="n">movie</span> <span class="k">join</span> <span class="n">rating</span> <span class="k">using</span><span class="p">(</span><span class="n">mID</span><span class="p">)</span> <span class="k">join</span> <span class="n">reviewer</span> <span class="k">using</span><span class="p">(</span><span class="n">rID</span><span class="p">)</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">reviewer</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">movie</span><span class="p">.</span><span class="n">title</span><span class="p">,</span> <span class="n">rating</span><span class="p">.</span><span class="n">stars</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q6:-For-all-cases-where-the-same-reviewer-rated-the-same-movie-twice-and-gave-it-a-higher-rating-the-second-time,-return-the-reviewer's-name-and-the-title-of-the-movie.">Q6: For all cases where the same reviewer rated the same movie twice and gave it a higher rating the second time, return the reviewer's name and the title of the movie.<a class="anchor-link" href="#Q6:-For-all-cases-where-the-same-reviewer-rated-the-same-movie-twice-and-gave-it-a-higher-rating-the-second-time,-return-the-reviewer's-name-and-the-title-of-the-movie.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="c1">--1st Solution:</span>
+<span class="k">select</span> <span class="n">reviewer</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">movie</span><span class="p">.</span><span class="n">title</span>
+<span class="k">from</span> <span class="n">movie</span> <span class="k">join</span> <span class="p">(</span><span class="k">select</span> <span class="n">R1</span><span class="p">.</span><span class="n">mID</span><span class="p">,</span> <span class="n">R1</span><span class="p">.</span><span class="n">rID</span> <span class="k">from</span> <span class="n">rating</span> <span class="n">R1</span><span class="p">,</span> <span class="n">rating</span> <span class="n">R2</span> 
+                 <span class="k">where</span> <span class="n">R1</span><span class="p">.</span><span class="n">mID</span> <span class="o">=</span> <span class="n">R2</span><span class="p">.</span><span class="n">mID</span> <span class="k">and</span> <span class="n">R1</span><span class="p">.</span><span class="n">rID</span> <span class="o">=</span> <span class="n">R2</span><span class="p">.</span><span class="n">rID</span> 
+                 <span class="k">and</span> <span class="n">R1</span><span class="p">.</span><span class="n">ratingDate</span> <span class="o">&lt;</span> <span class="n">R2</span><span class="p">.</span><span class="n">ratingDate</span> 
+                 <span class="k">and</span> <span class="n">R1</span><span class="p">.</span><span class="n">stars</span> <span class="o">&lt;</span> <span class="n">R2</span><span class="p">.</span><span class="n">stars</span><span class="p">)</span> <span class="k">using</span><span class="p">(</span><span class="n">mID</span><span class="p">)</span> <span class="k">join</span> <span class="n">reviewer</span> <span class="k">using</span><span class="p">(</span><span class="n">rID</span><span class="p">);</span>
+
+<span class="c1">--2nd Solution:</span>
+<span class="k">select</span> <span class="n">R1</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">R1</span><span class="p">.</span><span class="n">title</span>
+<span class="k">from</span> <span class="p">(</span><span class="n">reviewer</span> <span class="k">join</span> <span class="n">rating</span> <span class="k">using</span><span class="p">(</span><span class="n">rID</span><span class="p">)</span> <span class="k">join</span> <span class="n">movie</span> <span class="k">using</span><span class="p">(</span><span class="n">mID</span><span class="p">))</span> <span class="k">as</span> <span class="n">R1</span><span class="p">,</span> <span class="n">rating</span> <span class="n">R2</span>
+<span class="k">where</span> <span class="n">R1</span><span class="p">.</span><span class="n">rID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">rID</span>
+                 <span class="k">from</span> <span class="n">rating</span>
+                 <span class="k">group</span> <span class="k">by</span> <span class="n">rID</span>
+                 <span class="k">having</span> <span class="k">count</span><span class="p">(</span><span class="n">rID</span><span class="p">)</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span>
+<span class="k">and</span> <span class="n">R1</span><span class="p">.</span><span class="n">rID</span> <span class="o">=</span> <span class="n">R2</span><span class="p">.</span><span class="n">rID</span>
+<span class="k">and</span> <span class="n">R1</span><span class="p">.</span><span class="n">mID</span> <span class="o">=</span> <span class="n">R2</span><span class="p">.</span><span class="n">mID</span>
+<span class="k">and</span> <span class="n">R1</span><span class="p">.</span><span class="n">ratingDate</span> <span class="o">&lt;</span> <span class="n">R2</span><span class="p">.</span><span class="n">ratingDate</span>
+<span class="k">and</span> <span class="n">R1</span><span class="p">.</span><span class="n">stars</span> <span class="o">&lt;</span> <span class="n">R2</span><span class="p">.</span><span class="n">stars</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q7:-For-each-movie-that-has-at-least-one-rating,-find-the-highest-number-of-stars-that-movie-received.-Return-the-movie-title-and-number-of-stars.-Sort-by-movie-title.">Q7: For each movie that has at least one rating, find the highest number of stars that movie received. Return the movie title and number of stars. Sort by movie title.<a class="anchor-link" href="#Q7:-For-each-movie-that-has-at-least-one-rating,-find-the-highest-number-of-stars-that-movie-received.-Return-the-movie-title-and-number-of-stars.-Sort-by-movie-title.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">title</span><span class="p">,</span> <span class="n">stars</span>
+<span class="k">from</span> <span class="n">movie</span> <span class="k">join</span> <span class="n">rating</span> <span class="k">using</span><span class="p">(</span><span class="n">mID</span><span class="p">)</span>
+<span class="k">group</span> <span class="k">by</span> <span class="n">movie</span><span class="p">.</span><span class="n">mID</span>
+<span class="k">having</span> <span class="n">rating</span><span class="p">.</span><span class="n">stars</span> <span class="o">=</span> <span class="k">max</span><span class="p">(</span><span class="n">rating</span><span class="p">.</span><span class="n">stars</span><span class="p">)</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">title</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q8:For-each-movie,-return-the-title-and-the-'rating-spread',-that-is,-the-difference-between-highest-and-lowest-ratings-given-to-that-movie.-Sort-by-rating-spread-from-highest-to-lowest,-then-by-movie-title.">Q8:For each movie, return the title and the 'rating spread', that is, the difference between highest and lowest ratings given to that movie. Sort by rating spread from highest to lowest, then by movie title.<a class="anchor-link" href="#Q8:For-each-movie,-return-the-title-and-the-'rating-spread',-that-is,-the-difference-between-highest-and-lowest-ratings-given-to-that-movie.-Sort-by-rating-spread-from-highest-to-lowest,-then-by-movie-title.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">title</span><span class="p">,</span> <span class="p">(</span><span class="n">maxR</span> <span class="o">-</span> <span class="n">minR</span><span class="p">)</span> <span class="k">as</span> <span class="n">ratingSpread</span>
+<span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">title</span><span class="p">,</span> <span class="k">max</span><span class="p">(</span><span class="n">stars</span><span class="p">)</span> <span class="k">as</span> <span class="n">maxR</span><span class="p">,</span> <span class="k">min</span><span class="p">(</span><span class="n">stars</span><span class="p">)</span> <span class="k">as</span> <span class="n">minR</span>
+      <span class="k">from</span> <span class="n">movie</span> <span class="k">join</span> <span class="n">rating</span> <span class="k">using</span><span class="p">(</span><span class="n">mID</span><span class="p">)</span>
+      <span class="k">group</span> <span class="k">by</span> <span class="n">mID</span><span class="p">)</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">ratingSpread</span> <span class="k">desc</span><span class="p">,</span> <span class="n">title</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q9:-Find-the-difference-between-the-average-rating-of-movies-released-before-1980-and-the-average-rating-of-movies-released-after-1980.-(Make-sure-to-calculate-the-average-rating-for-each-movie,-then-the-average-of-those-averages-for-movies-before-1980-and-movies-after.-Don't-just-calculate-the-overall-average-rating-before-and-after-1980.)">Q9: Find the difference between the average rating of movies released before 1980 and the average rating of movies released after 1980. (Make sure to calculate the average rating for each movie, then the average of those averages for movies before 1980 and movies after. Don't just calculate the overall average rating before and after 1980.)<a class="anchor-link" href="#Q9:-Find-the-difference-between-the-average-rating-of-movies-released-before-1980-and-the-average-rating-of-movies-released-after-1980.-(Make-sure-to-calculate-the-average-rating-for-each-movie,-then-the-average-of-those-averages-for-movies-before-1980-and-movies-after.-Don't-just-calculate-the-overall-average-rating-before-and-after-1980.)">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="k">avg</span><span class="p">(</span><span class="n">pre1980avg</span><span class="p">)</span> <span class="o">-</span> <span class="k">avg</span><span class="p">(</span><span class="n">post1980avg</span><span class="p">)</span> <span class="k">as</span> <span class="n">ratingDiff</span>
+<span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">mID</span><span class="p">,</span> <span class="k">avg</span><span class="p">(</span><span class="n">stars</span><span class="p">)</span> <span class="k">as</span> <span class="n">pre1980avg</span>
+      <span class="k">from</span> <span class="n">rating</span> <span class="k">join</span> <span class="n">movie</span> <span class="k">using</span><span class="p">(</span><span class="n">mID</span><span class="p">)</span>
+      <span class="k">group</span> <span class="k">by</span> <span class="n">mID</span>
+      <span class="k">having</span> <span class="k">year</span> <span class="o">&lt;</span> <span class="mi">1980</span><span class="p">),</span>
+     <span class="p">(</span><span class="k">select</span> <span class="n">mID</span><span class="p">,</span> <span class="k">avg</span><span class="p">(</span><span class="n">stars</span><span class="p">)</span> <span class="k">as</span> <span class="n">post1980avg</span>
+      <span class="k">from</span> <span class="n">rating</span> <span class="k">join</span> <span class="n">movie</span> <span class="k">using</span><span class="p">(</span><span class="n">mID</span><span class="p">)</span>
+      <span class="k">group</span> <span class="k">by</span> <span class="n">mID</span>
+      <span class="k">having</span> <span class="k">year</span> <span class="o">&gt;</span> <span class="mi">1980</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Modification-Exercises:">Modification Exercises:<a class="anchor-link" href="#Modification-Exercises:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q1:-Add-the-reviewer-Roger-Ebert-to-your-database,-with-an-rID-of-209.">Q1: Add the reviewer Roger Ebert to your database, with an rID of 209.<a class="anchor-link" href="#Q1:-Add-the-reviewer-Roger-Ebert-to-your-database,-with-an-rID-of-209.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">insert</span> <span class="k">into</span> <span class="n">reviewer</span> <span class="k">values</span> <span class="p">(</span><span class="mi">209</span><span class="p">,</span> <span class="s1">&#39;Roger Ebert&#39;</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q2:-Insert-5-star-ratings-by-James-Cameron-for-all-movies-in-the-database.-Leave-the-review-date-as-NULL.">Q2: Insert 5-star ratings by James Cameron for all movies in the database. Leave the review date as NULL.<a class="anchor-link" href="#Q2:-Insert-5-star-ratings-by-James-Cameron-for-all-movies-in-the-database.-Leave-the-review-date-as-NULL.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="c1">-- &quot;Correct&quot; answer:</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">rating</span>
+<span class="k">select</span> <span class="p">(</span><span class="k">select</span> <span class="k">distinct</span> <span class="n">rID</span> <span class="k">from</span> <span class="n">reviewer</span> <span class="k">where</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;James Cameron&#39;</span><span class="p">),</span> <span class="n">mID</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="k">null</span>
+<span class="k">from</span> <span class="n">movie</span><span class="p">;</span>
+
+<span class="c1">-- What I think it should be to avoid duplicate ratings by James Cameron:</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">rating</span>
+<span class="k">select</span> <span class="p">(</span><span class="k">select</span> <span class="k">distinct</span> <span class="n">rID</span> <span class="k">from</span> <span class="n">reviewer</span> <span class="k">where</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;James Cameron&#39;</span><span class="p">),</span> <span class="n">mID</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="k">null</span>
+<span class="k">from</span> <span class="n">movie</span> 
+<span class="k">where</span> <span class="n">mID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="k">distinct</span> <span class="n">mID</span> 
+                  <span class="k">from</span> <span class="n">rating</span> 
+                  <span class="k">where</span> <span class="n">rID</span> <span class="o">=</span> <span class="p">(</span><span class="k">select</span> <span class="k">distinct</span> <span class="n">rID</span> <span class="k">from</span> <span class="n">reviewer</span> <span class="k">where</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;James Cameron&#39;</span><span class="p">));</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q3:-For-all-movies-that-have-an-average-rating-of-4-stars-or-higher,-add-25-to-the-release-year.-(Update-the-existing-tuples;-don't-insert-new-tuples.)">Q3: For all movies that have an average rating of 4 stars or higher, add 25 to the release year. (Update the existing tuples; don't insert new tuples.)<a class="anchor-link" href="#Q3:-For-all-movies-that-have-an-average-rating-of-4-stars-or-higher,-add-25-to-the-release-year.-(Update-the-existing-tuples;-don't-insert-new-tuples.)">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">update</span> <span class="n">movie</span>
+<span class="k">set</span> <span class="k">year</span> <span class="o">=</span> <span class="k">year</span> <span class="o">+</span> <span class="mi">25</span>
+<span class="k">where</span> <span class="n">mID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="k">distinct</span> <span class="n">mID</span> 
+              <span class="k">from</span> <span class="n">rating</span> 
+              <span class="k">group</span> <span class="k">by</span> <span class="n">mID</span> 
+              <span class="k">having</span> <span class="k">avg</span><span class="p">(</span><span class="n">stars</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q4:-Remove-all-ratings-where-the-movie's-year-is-before-1970-or-after-2000,-and-the-rating-is-fewer-than-4-stars.">Q4: Remove all ratings where the movie's year is before 1970 or after 2000, and the rating is fewer than 4 stars.<a class="anchor-link" href="#Q4:-Remove-all-ratings-where-the-movie's-year-is-before-1970-or-after-2000,-and-the-rating-is-fewer-than-4-stars.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">delete</span> <span class="k">from</span> <span class="n">rating</span>
+<span class="k">where</span> <span class="n">mID</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="k">distinct</span> <span class="n">mID</span> <span class="k">from</span> <span class="n">movie</span> <span class="k">where</span> <span class="k">year</span> <span class="o">&lt;</span> <span class="mi">1970</span> <span class="k">or</span> <span class="k">year</span> <span class="o">&gt;</span> <span class="mi">2000</span><span class="p">)</span> <span class="k">and</span> <span class="n">stars</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Exercise-2:-Highschool-Drama">Exercise 2: Highschool Drama<a class="anchor-link" href="#Exercise-2:-Highschool-Drama">&#182;</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="social.sql:">social.sql:<a class="anchor-link" href="#social.sql:">&#182;</a></h2><div class="highlight"><pre><span></span><span class="cm">/* Delete the tables if they already exist */</span>
+<span class="k">drop</span> <span class="k">table</span> <span class="k">if</span> <span class="k">exists</span> <span class="n">Highschooler</span><span class="p">;</span>
+<span class="k">drop</span> <span class="k">table</span> <span class="k">if</span> <span class="k">exists</span> <span class="n">Friend</span><span class="p">;</span>
+<span class="k">drop</span> <span class="k">table</span> <span class="k">if</span> <span class="k">exists</span> <span class="n">Likes</span><span class="p">;</span>
+
+<span class="cm">/* Create the schema for our tables */</span>
+<span class="k">create</span> <span class="k">table</span> <span class="n">Highschooler</span><span class="p">(</span><span class="n">ID</span> <span class="nb">int</span><span class="p">,</span> <span class="n">name</span> <span class="nb">text</span><span class="p">,</span> <span class="n">grade</span> <span class="nb">int</span><span class="p">);</span>
+<span class="k">create</span> <span class="k">table</span> <span class="n">Friend</span><span class="p">(</span><span class="n">ID1</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ID2</span> <span class="nb">int</span><span class="p">);</span>
+<span class="k">create</span> <span class="k">table</span> <span class="n">Likes</span><span class="p">(</span><span class="n">ID1</span> <span class="nb">int</span><span class="p">,</span> <span class="n">ID2</span> <span class="nb">int</span><span class="p">);</span>
+
+<span class="cm">/* Populate the tables with our data */</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1510</span><span class="p">,</span> <span class="s1">&#39;Jordan&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1689</span><span class="p">,</span> <span class="s1">&#39;Gabriel&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1381</span><span class="p">,</span> <span class="s1">&#39;Tiffany&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1709</span><span class="p">,</span> <span class="s1">&#39;Cassandra&#39;</span><span class="p">,</span> <span class="mi">9</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1101</span><span class="p">,</span> <span class="s1">&#39;Haley&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1782</span><span class="p">,</span> <span class="s1">&#39;Andrew&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1468</span><span class="p">,</span> <span class="s1">&#39;Kris&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1641</span><span class="p">,</span> <span class="s1">&#39;Brittany&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1247</span><span class="p">,</span> <span class="s1">&#39;Alexis&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1316</span><span class="p">,</span> <span class="s1">&#39;Austin&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1911</span><span class="p">,</span> <span class="s1">&#39;Gabriel&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1501</span><span class="p">,</span> <span class="s1">&#39;Jessica&#39;</span><span class="p">,</span> <span class="mi">11</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1304</span><span class="p">,</span> <span class="s1">&#39;Jordan&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1025</span><span class="p">,</span> <span class="s1">&#39;John&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1934</span><span class="p">,</span> <span class="s1">&#39;Kyle&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Highschooler</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1661</span><span class="p">,</span> <span class="s1">&#39;Logan&#39;</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1510</span><span class="p">,</span> <span class="mi">1381</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1510</span><span class="p">,</span> <span class="mi">1689</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1689</span><span class="p">,</span> <span class="mi">1709</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1381</span><span class="p">,</span> <span class="mi">1247</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1709</span><span class="p">,</span> <span class="mi">1247</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1689</span><span class="p">,</span> <span class="mi">1782</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1782</span><span class="p">,</span> <span class="mi">1468</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1782</span><span class="p">,</span> <span class="mi">1316</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1782</span><span class="p">,</span> <span class="mi">1304</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1468</span><span class="p">,</span> <span class="mi">1101</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1468</span><span class="p">,</span> <span class="mi">1641</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1101</span><span class="p">,</span> <span class="mi">1641</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1247</span><span class="p">,</span> <span class="mi">1911</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1247</span><span class="p">,</span> <span class="mi">1501</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1911</span><span class="p">,</span> <span class="mi">1501</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1501</span><span class="p">,</span> <span class="mi">1934</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1316</span><span class="p">,</span> <span class="mi">1934</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1934</span><span class="p">,</span> <span class="mi">1304</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1304</span><span class="p">,</span> <span class="mi">1661</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">values</span> <span class="p">(</span><span class="mi">1661</span><span class="p">,</span> <span class="mi">1025</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Friend</span> <span class="k">select</span> <span class="n">ID2</span><span class="p">,</span> <span class="n">ID1</span> <span class="k">from</span> <span class="n">Friend</span><span class="p">;</span>
+
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Likes</span> <span class="k">values</span><span class="p">(</span><span class="mi">1689</span><span class="p">,</span> <span class="mi">1709</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Likes</span> <span class="k">values</span><span class="p">(</span><span class="mi">1709</span><span class="p">,</span> <span class="mi">1689</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Likes</span> <span class="k">values</span><span class="p">(</span><span class="mi">1782</span><span class="p">,</span> <span class="mi">1709</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Likes</span> <span class="k">values</span><span class="p">(</span><span class="mi">1911</span><span class="p">,</span> <span class="mi">1247</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Likes</span> <span class="k">values</span><span class="p">(</span><span class="mi">1247</span><span class="p">,</span> <span class="mi">1468</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Likes</span> <span class="k">values</span><span class="p">(</span><span class="mi">1641</span><span class="p">,</span> <span class="mi">1468</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Likes</span> <span class="k">values</span><span class="p">(</span><span class="mi">1316</span><span class="p">,</span> <span class="mi">1304</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Likes</span> <span class="k">values</span><span class="p">(</span><span class="mi">1501</span><span class="p">,</span> <span class="mi">1934</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Likes</span> <span class="k">values</span><span class="p">(</span><span class="mi">1934</span><span class="p">,</span> <span class="mi">1501</span><span class="p">);</span>
+<span class="k">insert</span> <span class="k">into</span> <span class="n">Likes</span> <span class="k">values</span><span class="p">(</span><span class="mi">1025</span><span class="p">,</span> <span class="mi">1101</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Query-Exercises:">Query Exercises:<a class="anchor-link" href="#Query-Exercises:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q1:-Find-the-names-of-all-students-who-are-friends-with-someone-named-Gabriel.">Q1: Find the names of all students who are friends with someone named Gabriel.<a class="anchor-link" href="#Q1:-Find-the-names-of-all-students-who-are-friends-with-someone-named-Gabriel.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="k">distinct</span> <span class="n">highschooler</span><span class="p">.</span><span class="n">name</span>
+<span class="k">from</span> <span class="n">friend</span><span class="p">,</span> <span class="n">highschooler</span>
+<span class="k">where</span> <span class="n">friend</span><span class="p">.</span><span class="n">ID1</span> <span class="o">=</span> <span class="n">highschooler</span><span class="p">.</span><span class="n">ID</span> <span class="k">and</span> <span class="n">friend</span><span class="p">.</span><span class="n">ID2</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">ID</span> <span class="k">from</span> <span class="n">highschooler</span> <span class="k">where</span> <span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Gabriel&#39;</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q2:-For-every-student-who-likes-someone-2-or-more-grades-younger-than-themselves,-return-that-student's-name-and-grade,-and-the-name-and-grade-of-the-student-they-like.">Q2: For every student who likes someone 2 or more grades younger than themselves, return that student's name and grade, and the name and grade of the student they like.<a class="anchor-link" href="#Q2:-For-every-student-who-likes-someone-2-or-more-grades-younger-than-themselves,-return-that-student's-name-and-grade,-and-the-name-and-grade-of-the-student-they-like.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">H1</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">H1</span><span class="p">.</span><span class="n">grade</span><span class="p">,</span> <span class="n">H2</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">H2</span><span class="p">.</span><span class="n">grade</span>
+<span class="k">from</span> <span class="n">highschooler</span> <span class="n">H1</span><span class="p">,</span> <span class="n">highschooler</span> <span class="n">H2</span><span class="p">,</span> <span class="n">likes</span> <span class="n">L</span>
+<span class="k">where</span> <span class="n">H1</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">L</span><span class="p">.</span><span class="n">ID1</span> <span class="k">and</span> <span class="n">H2</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">L</span><span class="p">.</span><span class="n">ID2</span> <span class="k">and</span> <span class="p">(</span><span class="n">H1</span><span class="p">.</span><span class="n">grade</span> <span class="o">-</span> <span class="n">H2</span><span class="p">.</span><span class="n">grade</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q3:-For-every-pair-of-students-who-both-like-each-other,-return-the-name-and-grade-of-both-students.-Include-each-pair-only-once,-with-the-two-names-in-alphabetical-order.">Q3: For every pair of students who both like each other, return the name and grade of both students. Include each pair only once, with the two names in alphabetical order.<a class="anchor-link" href="#Q3:-For-every-pair-of-students-who-both-like-each-other,-return-the-name-and-grade-of-both-students.-Include-each-pair-only-once,-with-the-two-names-in-alphabetical-order.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="k">distinct</span>     <span class="n">H1</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">H1</span><span class="p">.</span><span class="n">grade</span><span class="p">,</span> <span class="n">H2</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">H2</span><span class="p">.</span><span class="n">grade</span>
+<span class="k">from</span> <span class="n">highschooler</span> <span class="n">H1</span><span class="p">,</span> <span class="n">highschooler</span> <span class="n">H2</span><span class="p">,</span> <span class="n">likes</span> <span class="n">L1</span><span class="p">,</span> <span class="n">likes</span> <span class="n">L2</span>
+<span class="k">where</span> <span class="n">H1</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">L1</span><span class="p">.</span><span class="n">ID1</span> <span class="k">and</span> <span class="n">H2</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">L1</span><span class="p">.</span><span class="n">ID2</span>
+<span class="k">and</span> <span class="n">H1</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">L2</span><span class="p">.</span><span class="n">ID2</span> <span class="k">and</span> <span class="n">H2</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">L2</span><span class="p">.</span><span class="n">ID1</span>
+<span class="k">and</span> <span class="n">H1</span><span class="p">.</span><span class="n">name</span> <span class="o">&lt;</span> <span class="n">H2</span><span class="p">.</span><span class="n">name</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q4:-Find-all-students-who-do-not-appear-in-the-Likes-table-(as-a-student-who-likes-or-is-liked)-and-return-their-names-and-grades.-Sort-by-grade,-then-by-name-within-each-grade.">Q4: Find all students who do not appear in the Likes table (as a student who likes or is liked) and return their names and grades. Sort by grade, then by name within each grade.<a class="anchor-link" href="#Q4:-Find-all-students-who-do-not-appear-in-the-Likes-table-(as-a-student-who-likes-or-is-liked)-and-return-their-names-and-grades.-Sort-by-grade,-then-by-name-within-each-grade.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">name</span><span class="p">,</span> <span class="n">grade</span>
+<span class="k">from</span> <span class="n">highschooler</span>
+<span class="k">where</span> <span class="n">highschooler</span><span class="p">.</span><span class="n">ID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">ID1</span> <span class="k">from</span> <span class="n">likes</span> <span class="k">union</span> <span class="k">select</span> <span class="n">ID2</span> <span class="k">from</span> <span class="n">likes</span><span class="p">)</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">grade</span><span class="p">,</span> <span class="n">name</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q5:-For-every-situation-where-student-A-likes-student-B,-but-we-have-no-information-about-whom-B-likes-(that-is,-B-does-not-appear-as-an-ID1-in-the-Likes-table),-return-A-and-B's-names-and-grades.">Q5: For every situation where student A likes student B, but we have no information about whom B likes (that is, B does not appear as an ID1 in the Likes table), return A and B's names and grades.<a class="anchor-link" href="#Q5:-For-every-situation-where-student-A-likes-student-B,-but-we-have-no-information-about-whom-B-likes-(that-is,-B-does-not-appear-as-an-ID1-in-the-Likes-table),-return-A-and-B's-names-and-grades.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">A</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">.</span><span class="n">grade</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">grade</span>
+<span class="k">from</span> <span class="n">highschooler</span> <span class="n">A</span><span class="p">,</span> <span class="n">highschooler</span> <span class="n">B</span><span class="p">,</span> <span class="n">likes</span> <span class="n">L</span>
+<span class="k">where</span> <span class="n">A</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">L</span><span class="p">.</span><span class="n">ID1</span> <span class="k">and</span> <span class="n">B</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">L</span><span class="p">.</span><span class="n">ID2</span>
+<span class="k">and</span> <span class="n">B</span><span class="p">.</span><span class="n">ID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">ID1</span> <span class="k">from</span> <span class="n">likes</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q6:-Find-names-and-grades-of-students-who-only-have-friends-in-the-same-grade.-Return-the-result-sorted-by-grade,-then-by-name-within-each-grade.">Q6: Find names and grades of students who only have friends in the same grade. Return the result sorted by grade, then by name within each grade.<a class="anchor-link" href="#Q6:-Find-names-and-grades-of-students-who-only-have-friends-in-the-same-grade.-Return-the-result-sorted-by-grade,-then-by-name-within-each-grade.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">name</span><span class="p">,</span> <span class="n">grade</span>
+<span class="k">from</span> <span class="n">highschooler</span> <span class="n">H</span>
+<span class="k">where</span> <span class="n">H</span><span class="p">.</span><span class="n">ID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="k">distinct</span> <span class="n">H1</span><span class="p">.</span><span class="n">ID</span>
+                   <span class="k">from</span> <span class="n">highschooler</span> <span class="n">H1</span><span class="p">,</span> <span class="n">highschooler</span> <span class="n">H2</span><span class="p">,</span> <span class="n">friend</span> <span class="n">F</span>
+                   <span class="k">where</span> <span class="n">H1</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="n">ID1</span> <span class="k">and</span> <span class="n">H2</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">F</span><span class="p">.</span><span class="n">ID2</span> <span class="k">and</span> <span class="n">H1</span><span class="p">.</span><span class="n">grade</span> <span class="o">&lt;&gt;</span> <span class="n">H2</span><span class="p">.</span><span class="n">grade</span><span class="p">)</span>
+<span class="k">order</span> <span class="k">by</span> <span class="n">grade</span><span class="p">,</span> <span class="n">name</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q7:-For-each-student-A-who-likes-a-student-B-where-the-two-are-not-friends,-find-if-they-have-a-friend-C-in-common-(who-can-introduce-them!).-For-all-such-trios,-return-the-name-and-grade-of-A,-B,-and-C.">Q7: For each student A who likes a student B where the two are not friends, find if they have a friend C in common (who can introduce them!). For all such trios, return the name and grade of A, B, and C.<a class="anchor-link" href="#Q7:-For-each-student-A-who-likes-a-student-B-where-the-two-are-not-friends,-find-if-they-have-a-friend-C-in-common-(who-can-introduce-them!).-For-all-such-trios,-return-the-name-and-grade-of-A,-B,-and-C.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">A</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">A</span><span class="p">.</span><span class="n">grade</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="n">B</span><span class="p">.</span><span class="n">grade</span><span class="p">,</span> <span class="k">C</span><span class="p">.</span><span class="n">name</span><span class="p">,</span> <span class="k">C</span><span class="p">.</span><span class="n">grade</span>
+<span class="k">from</span> <span class="n">highschooler</span> <span class="n">A</span><span class="p">,</span> <span class="n">highschooler</span> <span class="n">B</span><span class="p">,</span> <span class="n">highschooler</span> <span class="k">C</span><span class="p">,</span> <span class="n">friend</span> <span class="n">F1</span><span class="p">,</span> <span class="n">friend</span> <span class="n">F2</span><span class="p">,</span> <span class="n">likes</span> <span class="n">L</span>
+<span class="k">where</span> <span class="n">A</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">L</span><span class="p">.</span><span class="n">ID1</span> <span class="k">and</span> <span class="n">B</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">L</span><span class="p">.</span><span class="n">ID2</span>
+<span class="k">and</span> <span class="n">B</span><span class="p">.</span><span class="n">ID</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">ID2</span> <span class="k">from</span> <span class="n">friend</span> <span class="k">where</span> <span class="n">ID1</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">ID</span><span class="p">)</span>
+<span class="k">and</span> <span class="k">C</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">F1</span><span class="p">.</span><span class="n">ID1</span> <span class="k">and</span> <span class="n">A</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">F1</span><span class="p">.</span><span class="n">ID2</span>
+<span class="k">and</span> <span class="k">C</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">F2</span><span class="p">.</span><span class="n">ID1</span> <span class="k">and</span> <span class="n">B</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">F2</span><span class="p">.</span><span class="n">ID2</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q8:-Find-the-difference-between-the-number-of-students-in-the-school-and-the-number-of-different-first-names.">Q8: Find the difference between the number of students in the school and the number of different first names.<a class="anchor-link" href="#Q8:-Find-the-difference-between-the-number-of-students-in-the-school-and-the-number-of-different-first-names.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="p">(</span><span class="n">numStudents</span> <span class="o">-</span> <span class="n">numNames</span><span class="p">)</span>
+<span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">numStudents</span>
+      <span class="k">from</span> <span class="n">highschooler</span><span class="p">),</span>
+     <span class="p">(</span><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="n">name</span><span class="p">)</span> <span class="k">as</span> <span class="n">numNames</span>
+     <span class="k">from</span> <span class="n">highschooler</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q9:-Find-the-name-and-grade-of-all-students-who-are-liked-by-more-than-one-other-student.">Q9: Find the name and grade of all students who are liked by more than one other student.<a class="anchor-link" href="#Q9:-Find-the-name-and-grade-of-all-students-who-are-liked-by-more-than-one-other-student.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">select</span> <span class="n">name</span><span class="p">,</span> <span class="n">grade</span>
+<span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">numLikers</span>
+    <span class="k">from</span> <span class="n">likes</span><span class="p">,</span> <span class="n">highschooler</span>
+    <span class="k">where</span> <span class="n">ID</span> <span class="o">=</span> <span class="n">ID2</span>
+    <span class="k">group</span> <span class="k">by</span> <span class="n">ID2</span><span class="p">)</span>
+<span class="k">where</span> <span class="n">numLikers</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Modification-Exercises:">Modification Exercises:<a class="anchor-link" href="#Modification-Exercises:">&#182;</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q1:-It's-time-for-the-seniors-to-graduate.-Remove-all-12th-graders-from-Highschooler.">Q1: It's time for the seniors to graduate. Remove all 12th graders from Highschooler.<a class="anchor-link" href="#Q1:-It's-time-for-the-seniors-to-graduate.-Remove-all-12th-graders-from-Highschooler.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">delete</span> <span class="k">from</span> <span class="n">highschooler</span>
+<span class="k">where</span> <span class="n">grade</span> <span class="o">=</span> <span class="mi">12</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q2:-If-two-students-A-and-B-are-friends,-and-A-likes-B-but-not-vice-versa,-remove-the-Likes-tuple.">Q2: If two students A and B are friends, and A likes B but not vice-versa, remove the Likes tuple.<a class="anchor-link" href="#Q2:-If-two-students-A-and-B-are-friends,-and-A-likes-B-but-not-vice-versa,-remove-the-Likes-tuple.">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">delete</span> <span class="k">from</span> <span class="n">likes</span>
+<span class="k">where</span> <span class="n">ID1</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">F</span><span class="p">.</span><span class="n">ID1</span> <span class="k">from</span> <span class="n">friend</span> <span class="n">F</span> <span class="k">where</span> <span class="n">F</span><span class="p">.</span><span class="n">ID2</span> <span class="o">=</span> <span class="n">likes</span><span class="p">.</span><span class="n">ID2</span><span class="p">)</span>
+<span class="k">and</span> <span class="n">ID2</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">L</span><span class="p">.</span><span class="n">ID2</span> <span class="k">from</span> <span class="n">likes</span> <span class="n">L</span> <span class="k">where</span> <span class="n">L</span><span class="p">.</span><span class="n">ID1</span> <span class="o">=</span> <span class="n">likes</span><span class="p">.</span><span class="n">ID1</span><span class="p">)</span>
+<span class="k">and</span> <span class="n">ID1</span> <span class="k">not</span> <span class="k">in</span> <span class="p">(</span><span class="k">select</span> <span class="n">L</span><span class="p">.</span><span class="n">ID2</span> <span class="k">from</span> <span class="n">likes</span> <span class="n">L</span> <span class="k">where</span> <span class="n">L</span><span class="p">.</span><span class="n">ID1</span> <span class="o">=</span> <span class="n">likes</span><span class="p">.</span><span class="n">ID2</span><span class="p">);</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="prompt input_prompt">
+</div>
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Q3:-For-all-cases-where-A-is-friends-with-B,-and-B-is-friends-with-C,-add-a-new-friendship-for-the-pair-A-and-C.-Do-not-add-duplicate-friendships,-friendships-that-already-exist,-or-friendships-with-oneself.-(This-one-is-a-bit-challenging;-congratulations-if-you-get-it-right.)">Q3: For all cases where A is friends with B, and B is friends with C, add a new friendship for the pair A and C. Do not add duplicate friendships, friendships that already exist, or friendships with oneself. (This one is a bit challenging; congratulations if you get it right.)<a class="anchor-link" href="#Q3:-For-all-cases-where-A-is-friends-with-B,-and-B-is-friends-with-C,-add-a-new-friendship-for-the-pair-A-and-C.-Do-not-add-duplicate-friendships,-friendships-that-already-exist,-or-friendships-with-oneself.-(This-one-is-a-bit-challenging;-congratulations-if-you-get-it-right.)">&#182;</a></h4><div class="highlight"><pre><span></span><span class="k">insert</span> <span class="k">into</span> <span class="n">friend</span>
+<span class="k">select</span> <span class="k">distinct</span> <span class="n">A</span><span class="p">.</span><span class="n">ID</span><span class="p">,</span> <span class="k">C</span><span class="p">.</span><span class="n">ID</span>
+<span class="k">from</span> <span class="n">highschooler</span> <span class="n">A</span><span class="p">,</span> <span class="n">highschooler</span> <span class="n">B</span><span class="p">,</span> <span class="n">highschooler</span> <span class="k">C</span><span class="p">,</span> <span class="n">friend</span> <span class="n">F1</span><span class="p">,</span> <span class="n">friend</span> <span class="n">F2</span>
+<span class="k">where</span> <span class="n">A</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">F1</span><span class="p">.</span><span class="n">ID1</span> <span class="k">and</span> <span class="n">B</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">F1</span><span class="p">.</span><span class="n">ID2</span>
+<span class="k">and</span> <span class="n">B</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">F2</span><span class="p">.</span><span class="n">ID1</span> <span class="k">and</span> <span class="k">C</span><span class="p">.</span><span class="n">ID</span> <span class="o">=</span> <span class="n">F2</span><span class="p">.</span><span class="n">ID2</span>
+<span class="k">and</span> <span class="k">not</span> <span class="k">exists</span> <span class="p">(</span><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">friend</span> <span class="k">where</span> <span class="n">friend</span><span class="p">.</span><span class="n">ID1</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">ID</span> <span class="k">and</span> <span class="n">friend</span><span class="p">.</span><span class="n">ID2</span> <span class="o">=</span> <span class="k">C</span><span class="p">.</span><span class="n">ID</span><span class="p">)</span>
+<span class="k">and</span> <span class="n">A</span><span class="p">.</span><span class="n">ID</span> <span class="o">&lt;&gt;</span> <span class="k">C</span><span class="p">.</span><span class="n">ID</span><span class="p">;</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 
 <div class="output_wrapper">
@@ -15290,7 +15816,7 @@ $$\Pi_{A_1,A_2,...,A_n}(\sigma_{condition}(R_1\ X\ R_2\ X\ ...\ X\ R_m))$$
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>[NbConvertApp] Converting notebook DB5_SQL_Notes.ipynb to html
-[NbConvertApp] Writing 337936 bytes to DB5_SQL_Notes.html
+[NbConvertApp] Writing 604655 bytes to DB5_SQL_Notes.html
 </pre>
 </div>
 </div>
